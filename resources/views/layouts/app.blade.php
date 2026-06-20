@@ -67,9 +67,18 @@
             </div>
 
             <nav class="flex-1 px-4 mt-6 overflow-y-auto custom-scrollbar space-y-2">
-                @php $role = auth()->user()->role; @endphp
+                @php 
+                    $role = auth()->user()->role; 
+                    // Menentukan rute dashboard yang benar berdasarkan role user
+                    $dashboardRoute = match($role) {
+                        'admin_dinas' => 'dashboard.admin',
+                        'pimpinan' => 'dashboard.pimpinan',
+                        'pengawas_lapangan' => 'dashboard.pengawas',
+                        default => 'dashboard.admin',
+                    };
+                @endphp
 
-                <a href="{{ route('dashboard') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white {{ request()->routeIs('dashboard') ? 'sidebar-active text-white' : 'hover:bg-white/10' }}">
+                <a href="{{ route($dashboardRoute) }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white {{ request()->routeIs($dashboardRoute) ? 'sidebar-active text-white' : 'hover:bg-white/10' }}">
                     <i class="fas fa-chart-line w-6 text-center"></i>
                     <span class="nav-text ml-3 font-bold text-sm tracking-wide">Dashboard</span>
                 </a>

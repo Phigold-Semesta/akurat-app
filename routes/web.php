@@ -23,19 +23,17 @@ Route::post('/login/koperasi', [AuthController::class, 'loginKoperasi']);
 // Logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Grouping route dengan middleware auth agar aman
-Route::middleware(['auth'])->group(function () {
-    
-    // Dashboard untuk Admin Dinas
-    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('dashboard');
+// Grouping route dengan middleware auth yang disesuaikan per guard
+// Kita memisahkan grup agar middleware auth mengenali guard masing-masing
 
-    // Dashboard untuk Pimpinan
-    Route::get('/pimpinan/dashboard', [PimpinanController::class, 'index'])->name('dashboard');
+// Grup Dashboard Koperasi
+Route::middleware(['auth:koperasi'])->group(function () {
+    Route::get('/koperasi/dashboard', [KoperasiController::class, 'index'])->name('dashboard.koperasi');
+});
 
-    // Dashboard untuk Pengawas
-    Route::get('/pengawas/dashboard', [PengawasController::class, 'index'])->name('dashboard');
-
-    // Dashboard untuk Koperasi
-    Route::get('/koperasi/dashboard', [KoperasiController::class, 'index'])->name('dashboard');
-    
+// Grup Dashboard Internal (Admin, Pimpinan, Pengawas)
+Route::middleware(['auth:internal'])->group(function () {
+    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('dashboard.admin');
+    Route::get('/pimpinan/dashboard', [PimpinanController::class, 'index'])->name('dashboard.pimpinan');
+    Route::get('/pengawas/dashboard', [PengawasController::class, 'index'])->name('dashboard.pengawas');
 });
