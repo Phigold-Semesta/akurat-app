@@ -51,7 +51,10 @@
         #main-sidebar { width: 88px; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
         @media (min-width: 1024px) {
             #main-sidebar:hover { width: 288px; }
-            #main-sidebar:not(:hover) .nav-text, #main-sidebar:not(:hover) .menu-header { opacity: 0; display: none; }
+            /* Memperbaiki agar elemen tersembunyi dengan rapi saat sidebar mengecil */
+            #main-sidebar:not(:hover) .nav-text, 
+            #main-sidebar:not(:hover) .menu-header,
+            #main-sidebar:not(:hover) .brand-text { opacity: 0; display: none; }
         }
     </style>
 </head>
@@ -59,17 +62,16 @@
 
     <div class="flex min-h-screen overflow-hidden">
         <aside id="main-sidebar" class="bg-emerald-600 dark:bg-emerald-900 h-screen flex flex-col z-40 shadow-2xl shrink-0 overflow-hidden group border-r border-emerald-700/50">
-            <div class="p-6 h-24 flex items-center shrink-0 border-b border-emerald-700/30">
-                <div class="flex items-center gap-3">
-                    <div class="bg-white p-2 rounded-xl shadow-lg"><i class="fas fa-landmark text-emerald-600 text-lg"></i></div>
-                    <span class="font-black text-xl tracking-tighter uppercase text-white">AKURAT</span>
+            <div class="p-6 h-24 flex items-center shrink-0 border-b border-emerald-700/30 overflow-hidden">
+                <div class="flex items-center gap-3 whitespace-nowrap">
+                    <div class="bg-white p-2 rounded-xl shadow-lg shrink-0"><i class="fas fa-landmark text-emerald-600 text-lg"></i></div>
+                    <span class="brand-text font-black text-xl tracking-tighter uppercase text-white transition-opacity duration-300">AKURAT</span>
                 </div>
             </div>
 
             <nav class="flex-1 px-4 mt-6 overflow-y-auto custom-scrollbar space-y-2">
                 @php 
                     $role = auth()->user()->role; 
-                    // Menentukan rute dashboard yang benar berdasarkan role user
                     $dashboardRoute = match($role) {
                         'admin_dinas' => 'dashboard.admin',
                         'pimpinan' => 'dashboard.pimpinan',
@@ -84,28 +86,28 @@
                 </a>
 
                 @if($role === 'admin_dinas')
-                    <div class="menu-header px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-200/50 mt-4">Manajemen Data</div>
-                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white"><i class="fas fa-users w-6"></i><span class="nav-text ml-3 text-sm">Data Pengguna</span></a>
-                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white"><i class="fas fa-building w-6"></i><span class="nav-text ml-3 text-sm">Data Koperasi</span></a>
-                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white"><i class="fas fa-map-marked-alt w-6"></i><span class="nav-text ml-3 text-sm">Data Wilayah</span></a>
-                    <div class="menu-header px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-200/50">Laporan</div>
-                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white"><i class="fas fa-file-invoice w-6"></i><span class="nav-text ml-3 text-sm">Data RAT</span></a>
-                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white"><i class="fas fa-history w-6"></i><span class="nav-text ml-3 text-sm">Audit Log</span></a>
+                    <div class="menu-header px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-200/50 mt-4 transition-opacity">Manajemen Data</div>
+                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-users w-6"></i><span class="nav-text ml-3 text-sm">Data Pengguna</span></a>
+                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-building w-6"></i><span class="nav-text ml-3 text-sm">Data Koperasi</span></a>
+                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-map-marked-alt w-6"></i><span class="nav-text ml-3 text-sm">Data Wilayah</span></a>
+                    <div class="menu-header px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-200/50 transition-opacity">Laporan</div>
+                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-file-invoice w-6"></i><span class="nav-text ml-3 text-sm">Data RAT</span></a>
+                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-history w-6"></i><span class="nav-text ml-3 text-sm">Audit Log</span></a>
 
                 @elseif($role === 'pengawas_lapangan')
-                    <div class="menu-header px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-200/50 mt-4">Tugas Pengawasan</div>
-                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white"><i class="fas fa-check-double w-6"></i><span class="nav-text ml-3 text-sm">Verifikasi RAT</span></a>
-                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white"><i class="fas fa-clipboard-check w-6"></i><span class="nav-text ml-3 text-sm">Verifikasi Lapangan</span></a>
+                    <div class="menu-header px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-200/50 mt-4 transition-opacity">Tugas Pengawasan</div>
+                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-check-double w-6"></i><span class="nav-text ml-3 text-sm">Verifikasi RAT</span></a>
+                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-clipboard-check w-6"></i><span class="nav-text ml-3 text-sm">Verifikasi Lapangan</span></a>
 
                 @elseif($role === 'pimpinan')
-                    <div class="menu-header px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-200/50 mt-4">Monitoring</div>
-                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white"><i class="fas fa-file-alt w-6"></i><span class="nav-text ml-3 text-sm">Tinjau Laporan</span></a>
-                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white"><i class="fas fa-shield-alt w-6"></i><span class="nav-text ml-3 text-sm">Data Terverifikasi</span></a>
+                    <div class="menu-header px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-200/50 mt-4 transition-opacity">Monitoring</div>
+                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-file-alt w-6"></i><span class="nav-text ml-3 text-sm">Tinjau Laporan</span></a>
+                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-shield-alt w-6"></i><span class="nav-text ml-3 text-sm">Data Terverifikasi</span></a>
                 @endif
             </nav>
 
             <div class="p-4">
-                <button onclick="document.getElementById('logout-form').submit()" class="w-full flex items-center justify-center py-4 rounded-2xl bg-emerald-700/50 hover:bg-emerald-700 transition-all font-bold text-white">
+                <button onclick="confirmLogout()" class="w-full flex items-center justify-center py-4 rounded-2xl bg-emerald-700/50 hover:bg-emerald-700 transition-all font-bold text-white">
                     <i class="fas fa-power-off"></i>
                     <span class="nav-text ml-3 text-sm uppercase tracking-widest">Logout</span>
                 </button>
@@ -132,5 +134,24 @@
             </div>
         </main>
     </div>
+
+    <script>
+        function confirmLogout() {
+            Swal.fire({
+                title: 'Yakin ingin keluar?',
+                text: "Anda akan mengakhiri sesi login saat ini.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#008f5d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Logout',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('logout-form').submit();
+                }
+            })
+        }
+    </script>
 </body>
 </html>

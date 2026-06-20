@@ -3,77 +3,118 @@
 @section('title', 'Dashboard Admin')
 
 @section('content')
-<div class="space-y-8">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="space-y-6">
+    <div class="bg-white dark:bg-emerald-950 p-6 rounded-2xl shadow-sm border border-emerald-100 dark:border-emerald-800">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <select class="p-3 rounded-xl border border-emerald-200 dark:bg-emerald-900 dark:border-emerald-700 dark:text-white">
+                <option>Tahun: 2026</option>
+            </select>
+            <select class="p-3 rounded-xl border border-emerald-200 dark:bg-emerald-900 dark:border-emerald-700 dark:text-white">
+                <option>Semua Kecamatan</option>
+            </select>
+            <input type="text" placeholder="Cari nama koperasi..." class="p-3 rounded-xl border border-emerald-200 dark:bg-emerald-900 dark:border-emerald-700 dark:text-white placeholder:dark:text-emerald-400">
+            <button class="bg-emerald-600 text-white py-3 rounded-xl font-bold hover:bg-emerald-700 transition-all flex items-center justify-center gap-2">
+                <i class="fas fa-filter"></i> Filter Data
+            </button>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
         @php
-            $stats = [
-                ['title' => 'Total Koperasi', 'value' => '245', 'icon' => 'fa-building', 'color' => 'text-emerald-600'],
-                ['title' => 'Data Pengguna', 'value' => '82', 'icon' => 'fa-users', 'color' => 'text-blue-600'],
-                ['title' => 'Laporan RAT', 'value' => '1.204', 'icon' => 'fa-file-invoice', 'color' => 'text-purple-600'],
-                ['title' => 'Aktivitas Hari Ini', 'value' => '15', 'icon' => 'fa-history', 'color' => 'text-orange-600'],
+            $summaries = [
+                ['title' => 'Total Koperasi', 'value' => '245', 'cat' => 'Terdaftar di Sistem', 'icon' => 'fa-building', 'color' => 'emerald'],
+                ['title' => 'Data Pengguna', 'value' => '82', 'cat' => 'Akun Aktif', 'icon' => 'fa-users', 'color' => 'blue'],
+                ['title' => 'Laporan RAT', 'value' => '1.204', 'cat' => 'Tervalidasi', 'icon' => 'fa-file-invoice', 'color' => 'purple'],
+                ['title' => 'Aktivitas Hari Ini', 'value' => '15', 'cat' => 'Log Sistem', 'icon' => 'fa-history', 'color' => 'orange'],
             ];
         @endphp
-        
-        @foreach($stats as $stat)
-        <div class="bg-white dark:bg-emerald-900 p-6 rounded-3xl shadow-sm border border-emerald-100 dark:border-emerald-800 flex items-center gap-4">
-            <div class="w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-800 flex items-center justify-center {{ $stat['color'] }}">
-                <i class="fas {{ $stat['icon'] }} text-xl"></i>
+        @foreach($summaries as $item)
+        <div class="bg-white dark:bg-emerald-950 p-6 rounded-2xl border border-emerald-100 dark:border-emerald-800 shadow-sm hover:shadow-md transition-all">
+            <div class="flex justify-between items-start mb-4">
+                <div class="text-sm font-bold text-emerald-900 dark:text-emerald-100">{{ $item['title'] }}</div>
+                <i class="fas {{ $item['icon'] }} text-{{ $item['color'] }}-500"></i>
             </div>
-            <div>
-                <p class="text-emerald-600 dark:text-emerald-300 font-bold text-sm">{{ $stat['title'] }}</p>
-                <p class="text-2xl font-black">{{ $stat['value'] }}</p>
-            </div>
+            <div class="text-3xl font-black text-emerald-950 dark:text-white mb-1">{{ $item['value'] }}</div>
+            <div class="text-xs font-bold text-{{ $item['color'] }}-600 uppercase tracking-wider">{{ $item['cat'] }}</div>
         </div>
         @endforeach
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div class="lg:col-span-2 bg-white dark:bg-emerald-900 rounded-3xl shadow-sm border border-emerald-100 dark:border-emerald-800 overflow-hidden">
-            <div class="p-6 border-b border-emerald-100 dark:border-emerald-800">
-                <h2 class="font-black text-lg uppercase italic">Log Aktivitas Terbaru</h2>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-1 space-y-6">
+            <div class="bg-white dark:bg-emerald-950 p-6 rounded-2xl shadow-sm border border-emerald-100 dark:border-emerald-800">
+                <h3 class="font-black text-emerald-900 dark:text-white mb-4">Distribusi Kesehatan</h3>
+                <canvas id="healthChart" class="w-full h-56"></canvas>
             </div>
-            <div class="p-0">
-                <table class="w-full text-left">
-                    <thead class="bg-emerald-50 dark:bg-emerald-950/50">
+            <div class="bg-white dark:bg-emerald-950 p-6 rounded-2xl shadow-sm border border-emerald-100 dark:border-emerald-800">
+                <h3 class="font-black text-emerald-900 dark:text-white mb-4">Tren Aktivitas</h3>
+                <canvas id="trendChart" class="w-full h-56"></canvas>
+            </div>
+        </div>
+
+        <div class="lg:col-span-2 bg-white dark:bg-emerald-950 p-6 rounded-2xl shadow-sm border border-emerald-100 dark:border-emerald-800">
+            <h3 class="font-black text-emerald-900 dark:text-white mb-6 uppercase italic">Log Aktivitas Terbaru</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-emerald-900 dark:text-emerald-100">
+                    <thead class="text-emerald-500 uppercase text-xs border-b dark:border-emerald-800">
                         <tr>
-                            <th class="p-6 font-black uppercase text-xs">User</th>
-                            <th class="p-6 font-black uppercase text-xs">Aksi</th>
-                            <th class="p-6 font-black uppercase text-xs">Waktu</th>
+                            <th class="pb-4">User</th>
+                            <th class="pb-4">Aksi</th>
+                            <th class="pb-4">Waktu</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-emerald-100 dark:divide-emerald-800">
-                        <tr>
-                            <td class="p-6 font-bold text-sm">Admin Dinas</td>
-                            <td class="p-6 text-sm">Mengupdate Data Koperasi</td>
-                            <td class="p-6 text-sm text-emerald-500">2 Menit Lalu</td>
+                    <tbody class="divide-y dark:divide-emerald-800">
+                        <tr class="hover:bg-emerald-50 dark:hover:bg-emerald-900 transition-all">
+                            <td class="py-4 font-bold">Admin Dinas</td>
+                            <td class="py-4">Mengupdate Data Koperasi Karawang</td>
+                            <td class="py-4 text-emerald-500">2 Menit Lalu</td>
                         </tr>
-                        <tr>
-                            <td class="p-6 font-bold text-sm">Pengawas Lapangan</td>
-                            <td class="p-6 text-sm">Validasi RAT Koperasi</td>
-                            <td class="p-6 text-sm text-emerald-500">1 Jam Lalu</td>
+                        <tr class="hover:bg-emerald-50 dark:hover:bg-emerald-900 transition-all">
+                            <td class="py-4 font-bold">Pengawas Lapangan</td>
+                            <td class="py-4">Validasi RAT Koperasi Sejahtera</td>
+                            <td class="py-4 text-emerald-500">1 Jam Lalu</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-
-        <div class="bg-white dark:bg-emerald-900 rounded-3xl shadow-sm border border-emerald-100 dark:border-emerald-800 p-6">
-            <h2 class="font-black text-lg uppercase italic mb-6">Aksi Cepat</h2>
-            <div class="space-y-4">
-                <a href="#" class="flex items-center gap-4 p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-800 hover:bg-emerald-100 transition">
-                    <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-emerald-600"><i class="fas fa-plus"></i></div>
-                    <span class="font-bold">Tambah Pengguna</span>
-                </a>
-                <a href="#" class="flex items-center gap-4 p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-800 hover:bg-emerald-100 transition">
-                    <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-emerald-600"><i class="fas fa-map-marker-alt"></i></div>
-                    <span class="font-bold">Kelola Wilayah</span>
-                </a>
-                <a href="#" class="flex items-center gap-4 p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-800 hover:bg-emerald-100 transition">
-                    <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-emerald-600"><i class="fas fa-file-pdf"></i></div>
-                    <span class="font-bold">Generate Laporan</span>
-                </a>
-            </div>
-        </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Chart 1: Distribusi Kesehatan
+    new Chart(document.getElementById('healthChart').getContext('2d'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Sehat', 'Cukup Sehat', 'Tidak Sehat'],
+            datasets: [{
+                data: [120, 85, 40],
+                backgroundColor: ['#10b981', '#f59e0b', '#ef4444']
+            }]
+        },
+        options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8' } } } }
+    });
+
+    // Chart 2: Tren Aktivitas
+    new Chart(document.getElementById('trendChart').getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
+            datasets: [{
+                label: 'Aktivitas',
+                data: [40, 55, 45, 60, 80, 75],
+                borderColor: '#008f5d',
+                tension: 0.4,
+                fill: true,
+                backgroundColor: 'rgba(0, 143, 93, 0.1)'
+            }]
+        },
+        options: { 
+            responsive: true, 
+            plugins: { legend: { display: false } },
+            scales: { y: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } }, x: { ticks: { color: '#94a3b8' } } }
+        }
+    });
+</script>
 @endsection

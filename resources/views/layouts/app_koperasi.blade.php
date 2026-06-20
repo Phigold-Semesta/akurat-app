@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <script>
         tailwind.config = {
@@ -28,13 +29,15 @@
     <style>
         [x-cloak] { display: none !important; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .sidebar-active { background-color: rgba(255, 255, 255, 0.2); backdrop-filter: blur(4px); border: 1px solid rgba(255, 255, 255, 0.3); }
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 10px; }
+        
         #main-sidebar { width: 88px; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
         @media (min-width: 1024px) {
             #main-sidebar:hover { width: 288px; }
-            #main-sidebar:not(:hover) .nav-text, #main-sidebar:not(:hover) .menu-header { opacity: 0; display: none; }
+            #main-sidebar:not(:hover) .nav-text, 
+            #main-sidebar:not(:hover) .menu-header,
+            #main-sidebar:not(:hover) .brand-text { opacity: 0; display: none; }
         }
     </style>
 </head>
@@ -42,10 +45,10 @@
 
     <div class="flex min-h-screen overflow-hidden">
         <aside id="main-sidebar" class="bg-emerald-600 dark:bg-emerald-900 h-screen flex flex-col z-40 shadow-2xl shrink-0 border-r border-emerald-700/50">
-            <div class="p-6 h-24 flex items-center shrink-0 border-b border-emerald-700/30">
-                <div class="flex items-center gap-3">
-                    <div class="bg-white p-2 rounded-xl shadow-lg"><i class="fas fa-landmark text-emerald-600 text-lg"></i></div>
-                    <span class="font-black text-xl tracking-tighter uppercase text-white">AKURAT</span>
+            <div class="p-6 h-24 flex items-center shrink-0 border-b border-emerald-700/30 overflow-hidden">
+                <div class="flex items-center gap-3 whitespace-nowrap">
+                    <div class="bg-white p-2 rounded-xl shadow-lg shrink-0"><i class="fas fa-landmark text-emerald-600 text-lg"></i></div>
+                    <span class="brand-text font-black text-xl tracking-tighter uppercase text-white transition-opacity duration-300">AKURAT</span>
                 </div>
             </div>
 
@@ -55,7 +58,7 @@
                     <span class="nav-text ml-3 font-bold text-sm">Dashboard</span>
                 </a>
 
-                <div class="menu-header px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-200/50 mt-4">Menu Koperasi</div>
+                <div class="menu-header px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-200/50 mt-4 transition-opacity">Menu Koperasi</div>
                 
                 <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10">
                     <i class="fas fa-file-upload w-6 text-center"></i>
@@ -76,16 +79,10 @@
                     <i class="fas fa-download w-6 text-center"></i>
                     <span class="nav-text ml-3 font-bold text-sm">Unduh Sertifikat</span>
                 </a>
-
-                <div class="menu-header px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-200/50 mt-4">Profil</div>
-                <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10">
-                    <i class="fas fa-user-cog w-6 text-center"></i>
-                    <span class="nav-text ml-3 font-bold text-sm">Kelola Profil</span>
-                </a>
             </nav>
 
             <div class="p-4">
-                <button onclick="document.getElementById('logout-form').submit()" class="w-full flex items-center justify-center py-4 rounded-2xl bg-emerald-700/50 hover:bg-emerald-700 transition-all font-bold text-white">
+                <button onclick="confirmLogout()" class="w-full flex items-center justify-center py-4 rounded-2xl bg-emerald-700/50 hover:bg-emerald-700 transition-all font-bold text-white">
                     <i class="fas fa-power-off"></i>
                     <span class="nav-text ml-3 text-sm uppercase tracking-widest">Logout</span>
                 </button>
@@ -96,20 +93,35 @@
         <main class="flex-1 flex flex-col h-screen overflow-hidden">
             <header class="h-20 bg-white dark:bg-emerald-900 border-b border-emerald-100 dark:border-emerald-800 flex justify-between items-center px-10 shrink-0">
                 <h1 class="text-2xl font-black uppercase tracking-tighter italic text-emerald-900 dark:text-white">@yield('title')</h1>
-                <div class="flex items-center gap-4">
-                    <button @click="toggleTheme()" class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-800 flex items-center justify-center hover:scale-105 transition-all text-emerald-600 dark:text-yellow-400">
-                        <i x-show="!darkMode" class="fas fa-moon"></i>
-                        <i x-show="darkMode" class="fas fa-sun" x-cloak></i>
-                    </button>
-                </div>
+                <button @click="toggleTheme()" class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-800 flex items-center justify-center hover:scale-105 transition-all text-emerald-600 dark:text-yellow-400">
+                    <i x-show="!darkMode" class="fas fa-moon"></i>
+                    <i x-show="darkMode" class="fas fa-sun" x-cloak></i>
+                </button>
             </header>
 
             <div class="flex-1 overflow-y-auto p-10 custom-scrollbar">
-                <div class="max-w-7xl mx-auto">
-                    @yield('content')
-                </div>
+                @yield('content')
             </div>
         </main>
     </div>
+
+    <script>
+        function confirmLogout() {
+            Swal.fire({
+                title: 'Yakin ingin keluar?',
+                text: "Anda akan mengakhiri sesi login saat ini.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#008f5d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Logout',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('logout-form').submit();
+                }
+            })
+        }
+    </script>
 </body>
 </html>
