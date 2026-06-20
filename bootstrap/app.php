@@ -11,7 +11,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Mendaftarkan alias middleware agar bisa dipanggil dengan nama pendek
+        $middleware->alias([
+            'role'     => \App\Http\Middleware\CheckRole::class,
+            'koperasi' => \App\Http\Middleware\KoperasiMiddleware::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
