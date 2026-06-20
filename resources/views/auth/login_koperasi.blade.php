@@ -7,13 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         *{ margin:0; padding:0; box-sizing:border-box; }
-        body{
-            min-height:100vh;
-            overflow-x:hidden;
-            font-family:'Segoe UI',sans-serif;
-            background:linear-gradient(180deg,#ecfdf5 0%,#d1fae5 100%);
-            position:relative;
-        }
+        body{ min-height:100vh; overflow-x:hidden; font-family:'Segoe UI',sans-serif; background:linear-gradient(180deg,#ecfdf5 0%,#d1fae5 100%); position:relative; }
         .dots-left{ position:absolute; top:20px; left:20px; width:180px; height:120px; background-image:radial-gradient(#6ee7b7 1.5px,transparent 1.5px); background-size:20px 20px; opacity:.6; z-index:0; }
         .dots-right{ position:absolute; top:180px; right:40px; width:180px; height:180px; background-image:radial-gradient(#6ee7b7 1.5px,transparent 1.5px); background-size:20px 20px; opacity:.6; z-index:0; }
         .wave{ position:absolute; left:0; bottom:0; width:100%; height:260px; overflow:hidden; z-index:0; }
@@ -28,13 +22,11 @@
 </head>
 
 <body>
-
     <div class="dots-left"></div>
     <div class="dots-right"></div>
     <div class="wave"></div>
 
     <div class="relative z-10 flex flex-col items-center pt-8 pb-8 px-4">
-
         <div class="flex items-center justify-center gap-5 mb-4">
             <img src="{{ asset('assets/img/logo_disperindagkopukm.png') }}" alt="Logo Disperindagkop" class="w-[300px] md:w-[350px] h-auto object-contain">
             <div class="w-px h-16 bg-emerald-400"></div>
@@ -42,7 +34,6 @@
         </div>
 
         <div class="login-card w-full max-w-2xl border border-emerald-50 px-10 md:px-12 py-8 mt-0">
-
             <div class="text-center mb-6">
                 <div class="flex items-center justify-center gap-3 mb-2">
                     <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -54,13 +45,15 @@
                 <hr class="mt-4 border-emerald-100">
             </div>
 
-            <form action="{{ url('/login/koperasi') }}" method="POST" class="space-y-4">
+            {{-- FORM LOGIN --}}
+            <form action="{{ route('login.koperasi') }}" method="POST" class="space-y-4">
                 @csrf
 
+                {{-- Pastikan name atribut sama dengan yang di-validate di AuthController --}}
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-1">NIK / ID Koperasi</label>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">email</label>
                     <div class="relative">
-                        <input type="text" name="nik_koperasi" placeholder="Masukkan NIK atau ID Koperasi" required class="input-field w-full px-4 pr-12">
+                        <input type="text" name="email" value="{{ old('email') }}" placeholder="Masukkan NIK atau ID Koperasi" required class="input-field w-full px-4 pr-12">
                         <span class="absolute right-4 top-3 text-emerald-400 text-lg">🏢</span>
                     </div>
                 </div>
@@ -73,22 +66,22 @@
                     </div>
                 </div>
 
+                @if ($errors->any())
+                    <div class="text-red-500 text-sm mt-2 text-center">
+                        {{ $errors->first() }}
+                    </div>
+                @endif
+
                 <button type="submit" class="login-btn w-full h-12 rounded-lg text-white font-semibold shadow-md">
                     Login Koperasi
                 </button>
             </form>
 
             <div class="mt-6 text-center">
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="flex-1 border-t border-emerald-100"></div>
-                    <span class="text-sm text-gray-500">atau</span>
-                    <div class="flex-1 border-t border-emerald-100"></div>
-                </div>
                 <p class="text-sm text-gray-600">
                     Koperasi baru? <a href="#" class="font-bold text-emerald-600 hover:underline">Registrasi Koperasi</a>
                 </p>
             </div>
-
         </div>
     </div>
 </body>
