@@ -253,23 +253,29 @@
                 <div>
                     <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">Email</label>
                     <div class="relative">
-                        <input type="email" name="email" placeholder="Masukkan email Anda" required class="input-field px-4 pr-12 text-sm sm:text-base">
+                        <input type="email" name="email" placeholder="Masukkan email Anda" class="input-field px-4 pr-12 text-sm sm:text-base @error('email') border-red-500 @enderror" value="{{ old('email') }}">
                         <span class="absolute right-4 top-3 text-emerald-400 text-lg">✉️</span>
                     </div>
+                    @error('email')
+                        <p class="mt-1 text-xs text-red-600 font-bold">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
                     <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">Password</label>
                     <div class="relative">
-                        <input type="password" name="password" placeholder="Masukkan password Anda" required class="input-field px-4 pr-12 text-sm sm:text-base">
+                        <input type="password" name="password" placeholder="Masukkan password Anda" class="input-field px-4 pr-12 text-sm sm:text-base @error('password') border-red-500 @enderror">
                         <span class="absolute right-4 top-3 text-emerald-400 text-lg">🔒</span>
                     </div>
+                    @error('password')
+                        <p class="mt-1 text-xs text-red-600 font-bold">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
                     <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">Konfirmasi Password</label>
                     <div class="relative">
-                        <input type="password" name="password_confirmation" placeholder="Masukkan ulang password Anda" required class="input-field px-4 pr-12 text-sm sm:text-base">
+                        <input type="password" name="password_confirmation" placeholder="Masukkan ulang password Anda" class="input-field px-4 pr-12 text-sm sm:text-base">
                         <span class="absolute right-4 top-3 text-emerald-400 text-lg">🔒</span>
                     </div>
                 </div>
