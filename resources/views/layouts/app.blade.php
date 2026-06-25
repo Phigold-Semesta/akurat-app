@@ -51,7 +51,6 @@
         #main-sidebar { width: 88px; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
         @media (min-width: 1024px) {
             #main-sidebar:hover { width: 288px; }
-            /* Memperbaiki agar elemen tersembunyi dengan rapi saat sidebar mengecil */
             #main-sidebar:not(:hover) .nav-text, 
             #main-sidebar:not(:hover) .menu-header,
             #main-sidebar:not(:hover) .brand-text { opacity: 0; display: none; }
@@ -71,44 +70,46 @@
 
             <nav class="flex-1 px-4 mt-6 overflow-y-auto custom-scrollbar space-y-2">
                 @php 
-                    $role = auth()->user()->role; 
-                    $dashboardRoute = match($role) {
-                        'admin_dinas' => 'dashboard.admin',
-                        'pimpinan' => 'dashboard.pimpinan',
-                        'pengawas_lapangan' => 'dashboard.pengawas',
-                        default => 'dashboard.admin',
-                    };
+                    $role = trim(strtolower(auth()->user()->role ?? '')); 
                 @endphp
 
-                <a href="{{ route($dashboardRoute) }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white {{ request()->routeIs($dashboardRoute) ? 'sidebar-active text-white' : 'hover:bg-white/10' }}">
-                    <i class="fas fa-chart-line w-6 text-center"></i>
+                <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10">
+                    <i class="fas fa-chart-line w-6 text-center shrink-0"></i>
                     <span class="nav-text ml-3 font-bold text-sm tracking-wide">Dashboard</span>
                 </a>
 
-                @if($role === 'admin_dinas')
+                {{-- Otorisasi Menu Sidebar --}}
+                @if($role === 'admin_dinas' || $role === 'admin')
                     <div class="menu-header px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-200/50 mt-4 transition-opacity">Manajemen Data</div>
-                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-users w-6"></i><span class="nav-text ml-3 text-sm">Data Pengguna</span></a>
-                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-building w-6"></i><span class="nav-text ml-3 text-sm">Data Koperasi</span></a>
-                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-map-marked-alt w-6"></i><span class="nav-text ml-3 text-sm">Data Wilayah</span></a>
+                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-users w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Data Pengguna</span></a>
+                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-building w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Data Koperasi</span></a>
+                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-map-marked-alt w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Data Wilayah</span></a>
                     <div class="menu-header px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-200/50 transition-opacity">Laporan</div>
-                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-file-invoice w-6"></i><span class="nav-text ml-3 text-sm">Data RAT</span></a>
-                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-history w-6"></i><span class="nav-text ml-3 text-sm">Audit Log</span></a>
+                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-file-invoice w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Data RAT</span></a>
+                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-history w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Audit Log</span></a>
 
-                @elseif($role === 'pengawas_lapangan')
+                @elseif($role === 'koperasi')
+                    <div class="menu-header px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-200/50 mt-4 transition-opacity">Modul Koperasi</div>
+                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-file-upload w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Laporan RAT</span></a>
+                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-notes-medical w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">PEMKES</span></a>
+                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-medal w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Hasil Penilaian</span></a>
+                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-user-circle w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Profil Koperasi</span></a>
+
+                @elseif($role === 'pengawas_lapangan' || $role === 'pengawas')
                     <div class="menu-header px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-200/50 mt-4 transition-opacity">Tugas Pengawasan</div>
-                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-check-double w-6"></i><span class="nav-text ml-3 text-sm">Verifikasi RAT</span></a>
-                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-clipboard-check w-6"></i><span class="nav-text ml-3 text-sm">Verifikasi Lapangan</span></a>
+                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-check-double w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Verifikasi RAT</span></a>
+                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-clipboard-check w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Verifikasi Lapangan</span></a>
 
                 @elseif($role === 'pimpinan')
                     <div class="menu-header px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-200/50 mt-4 transition-opacity">Monitoring</div>
-                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-file-alt w-6"></i><span class="nav-text ml-3 text-sm">Tinjau Laporan</span></a>
-                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-shield-alt w-6"></i><span class="nav-text ml-3 text-sm">Data Terverifikasi</span></a>
+                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-file-alt w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Tinjau Laporan</span></a>
+                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-shield-alt w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Data Terverifikasi</span></a>
                 @endif
             </nav>
 
             <div class="p-4">
                 <button onclick="confirmLogout()" class="w-full flex items-center justify-center py-4 rounded-2xl bg-emerald-700/50 hover:bg-emerald-700 transition-all font-bold text-white">
-                    <i class="fas fa-power-off"></i>
+                    <i class="fas fa-power-off w-6 text-center shrink-0"></i>
                     <span class="nav-text ml-3 text-sm uppercase tracking-widest">Logout</span>
                 </button>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
@@ -123,7 +124,7 @@
                         <i x-show="!darkMode" class="fas fa-moon"></i>
                         <i x-show="darkMode" class="fas fa-sun" x-cloak></i>
                     </button>
-                    <img src="https://ui-avatars.com/api/?name={{ auth()->user()->name }}&background=008f5d&color=fff" class="w-10 h-10 rounded-full border-2 border-white dark:border-emerald-700 shadow-lg">
+                    <img src="https://ui-avatars.com/api/?name={{ auth()->user()->name ?? 'User' }}&background=008f5d&color=fff" class="w-10 h-10 rounded-full border-2 border-white dark:border-emerald-700 shadow-lg">
                 </div>
             </header>
 

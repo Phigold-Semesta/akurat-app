@@ -91,6 +91,7 @@
             border:1px solid #cbd5e1;
             border-radius:10px;
             transition:.25s;
+            width:100%;
         }
 
         .input-field:focus{
@@ -107,6 +108,107 @@
         .login-btn:hover{
             background:linear-gradient(90deg,#065f46,#064e3b);
         }
+
+        /* ── LOGO WRAPPER ── */
+        .logo-wrapper {
+            width: 100%;
+            max-width: 42rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding-right: 55px;
+        }
+
+        .logo-divider {
+            width: 1px;
+            height: 80px;
+            background-color: #6ee7b7;
+            flex-shrink: 0;
+        }
+
+        /* ── RESPONSIVE ── */
+
+        /* Mobile kecil (< 400px) */
+        @media (max-width: 399px) {
+            .logo-wrapper {
+                gap: 10px;
+                padding-right: 25px;
+            }
+            .logo-disperindagkop {
+                max-width: 220px;
+            }
+            .logo-karawang {
+                height: 70px;
+            }
+            .logo-divider {
+                height: 60px;
+            }
+            .login-card {
+                margin-top: -55px;
+                border-radius: 16px;
+            }
+        }
+
+        /* Mobile normal (400px - 639px) */
+        @media (min-width: 400px) and (max-width: 639px) {
+            .logo-wrapper {
+                gap: 12px;
+                padding-right: 35px;
+            }
+            .logo-disperindagkop {
+                max-width: 280px;
+            }
+            .logo-karawang {
+                height: 80px;
+            }
+            .logo-divider {
+                height: 68px;
+            }
+            .login-card {
+                margin-top: -65px;
+            }
+        }
+
+        /* Tablet (640px - 1023px) */
+        @media (min-width: 640px) and (max-width: 1023px) {
+            .logo-wrapper {
+                gap: 14px;
+                padding-right: 45px;
+            }
+            .logo-disperindagkop {
+                max-width: 360px;
+            }
+            .logo-karawang {
+                height: 96px;
+            }
+            .logo-divider {
+                height: 80px;
+            }
+            .login-card {
+                margin-top: -85px;
+            }
+        }
+
+        /* Desktop / Laptop (>= 1024px) */
+        @media (min-width: 1024px) {
+            .logo-wrapper {
+                gap: 16px;
+                padding-right: 55px;
+            }
+            .logo-disperindagkop {
+                max-width: 430px;
+            }
+            .logo-karawang {
+                height: 112px;
+            }
+            .logo-divider {
+                height: 80px;
+            }
+            .login-card {
+                margin-top: -100px;
+            }
+        }
     </style>
 </head>
 
@@ -116,75 +218,74 @@
     <div class="dots-right"></div>
     <div class="wave"></div>
 
-    <div class="relative z-10 flex flex-col items-center pt-4 pb-8 px-4">
+    <div class="relative z-10 flex flex-col items-center pt-3 pb-10 px-4">
 
-        <!-- Area Logo -->
-        <div class="flex items-center justify-center gap-5 mb-1">
-            <img src="{{ asset('assets/img/logo_disperindagkopukm.png') }}" alt="Logo Disperindagkop UKM" class="w-[360px] md:w-[400px] lg:w-[430px] h-auto object-contain">
-            <div class="w-px h-20 bg-emerald-400"></div>
-            <img src="{{ asset('assets/img/LAMBANG_KABUPATEN_KARAWANG.png') }}" alt="Logo Kabupaten Karawang" class="h-24 md:h-28 w-auto object-contain">
+        <div class="logo-wrapper">
+            <img
+                src="{{ asset('assets/img/logo_disperindagkopukm.png') }}"
+                alt="Logo Disperindagkop UKM"
+                class="logo-disperindagkop"
+                style="height:auto; object-fit:contain; display:block;">
+            <div class="logo-divider"></div>
+            <img
+                src="{{ asset('assets/img/LAMBANG_KABUPATEN_KARAWANG.png') }}"
+                alt="Logo Kabupaten Karawang"
+                class="logo-karawang"
+                style="width:auto; object-fit:contain; display:block;">
         </div>
 
-        <!-- Form Login -->
-        <div class="login-card w-full max-w-2xl border border-emerald-50 px-10 md:px-12 py-10">
+        <div class="login-card w-full max-w-2xl border border-emerald-50 px-6 sm:px-10 md:px-12 py-8 sm:py-10">
 
-            <!-- Header -->
-            <div class="text-center mb-8">
+            <div class="text-center mb-6 sm:mb-8">
                 <div class="flex items-center justify-center gap-3 mb-2">
-                    <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-7 h-7 sm:w-8 sm:h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8"></path>
                     </svg>
-                    <h1 class="text-3xl font-bold text-slate-800">Login</h1>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-slate-800">Login</h1>
                 </div>
-                <p class="text-sm text-gray-500">Masuk untuk mengakses sistem pengawasan koperasi</p>
-                <hr class="mt-5 border-emerald-100">
+                <p class="text-xs sm:text-sm text-gray-500">Masuk untuk mengakses sistem pengawasan koperasi</p>
+                <hr class="mt-4 sm:mt-5 border-emerald-100">
             </div>
 
-            <!-- Form -->
-            <form action="{{ url('/login/internal') }}" method="POST" class="space-y-5">
+            <form action="{{ url('/login/internal') }}" method="POST" class="space-y-4 sm:space-y-5">
                 @csrf
 
-                <!-- Email -->
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                    <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">Email</label>
                     <div class="relative">
-                        <input type="email" name="email" placeholder="Masukkan email Anda" required class="input-field w-full px-4 pr-12">
+                        <input type="email" name="email" placeholder="Masukkan email Anda" required class="input-field px-4 pr-12 text-sm sm:text-base">
                         <span class="absolute right-4 top-3 text-emerald-400 text-lg">✉️</span>
                     </div>
                 </div>
 
-                <!-- Password -->
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+                    <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">Password</label>
                     <div class="relative">
-                        <input type="password" name="password" placeholder="Masukkan password Anda" required class="input-field w-full px-4 pr-12">
+                        <input type="password" name="password" placeholder="Masukkan password Anda" required class="input-field px-4 pr-12 text-sm sm:text-base">
                         <span class="absolute right-4 top-3 text-emerald-400 text-lg">🔒</span>
                     </div>
                 </div>
 
-                <!-- Konfirmasi Password -->
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Konfirmasi Password</label>
+                    <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">Konfirmasi Password</label>
                     <div class="relative">
-                        <input type="password" name="password_confirmation" placeholder="Masukkan ulang password Anda" required class="input-field w-full px-4 pr-12">
+                        <input type="password" name="password_confirmation" placeholder="Masukkan ulang password Anda" required class="input-field px-4 pr-12 text-sm sm:text-base">
                         <span class="absolute right-4 top-3 text-emerald-400 text-lg">🔒</span>
                     </div>
                 </div>
 
-                <!-- Tombol Login -->
-                <button type="submit" class="login-btn w-full h-12 rounded-lg text-white font-semibold shadow-md">
+                <button type="submit" class="login-btn w-full h-11 sm:h-12 rounded-lg text-white text-sm sm:text-base font-semibold shadow-md">
                     Login
                 </button>
             </form>
 
-            <!-- Footer -->
-            <div class="mt-8 text-center">
-                <div class="flex items-center gap-4 mb-4">
+            <div class="mt-6 sm:mt-8 text-center">
+                <div class="flex items-center gap-4 mb-3 sm:mb-4">
                     <div class="flex-1 border-t border-emerald-100"></div>
-                    <span class="text-sm text-gray-500">atau</span>
+                    <span class="text-xs sm:text-sm text-gray-500">atau</span>
                     <div class="flex-1 border-t border-emerald-100"></div>
                 </div>
-                <p class="text-sm text-gray-600">
+                <p class="text-xs sm:text-sm text-gray-600">
                     Belum punya akun?
                     <a href="#" class="font-bold text-emerald-600 hover:underline">Daftar di sini</a>
                 </p>
