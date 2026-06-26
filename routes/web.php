@@ -40,7 +40,12 @@ Route::middleware(['auth:koperasi'])->prefix('koperasi')->group(function () {
 // Grup Dashboard Internal (Admin, Pimpinan, Pengawas)
 Route::middleware(['auth:internal'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('dashboard.admin');
+
     Route::get('/pimpinan/dashboard', [PimpinanController::class, 'index'])->name('dashboard.pimpinan');
+   
+    Route::get('/pimpinan/laporan', [PimpinanController::class, 'indexLaporan'])->name('pimpinan.laporan.index');
+    Route::get('/pimpinan/export/pdf', [PimpinanController::class, 'exportPdf'])->name('pimpinan.export.pdf');
+    Route::get('/pimpinan/export/excel', [PimpinanController::class, 'exportExcel'])->name('pimpinan.export.excel');
     
     // Rute Dashboard & Verifikasi RAT Pengawas
     Route::get('/pengawas/dashboard', [PengawasController::class, 'index'])->name('dashboard.pengawas');
