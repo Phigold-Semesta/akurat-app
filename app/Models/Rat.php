@@ -29,6 +29,7 @@ class Rat extends Model
         'tgl_rat',
         'tempat_rat',
         'jumlah_peserta',
+        'file_dokumen',
         'hasil_rat',
     ];
 

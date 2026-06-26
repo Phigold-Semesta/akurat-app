@@ -7,9 +7,9 @@ use App\Http\Controllers\PimpinanController;
 use App\Http\Controllers\PengawasController;
 use App\Http\Controllers\KoperasiController;
 
-// Landing Page
+// Landing Page - Diarahkan otomatis ke Login Internal
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login.internal');
 });
 
 // Auth Routes: Menampilkan form login
@@ -23,12 +23,18 @@ Route::post('/login/koperasi', [AuthController::class, 'loginKoperasi']);
 // Logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Grouping route dengan middleware auth yang disesuaikan per guard
-// Kita memisahkan grup agar middleware auth mengenali guard masing-masing
-
 // Grup Dashboard Koperasi
-Route::middleware(['auth:koperasi'])->group(function () {
-    Route::get('/koperasi/dashboard', [KoperasiController::class, 'index'])->name('dashboard.koperasi');
+Route::middleware(['auth:koperasi'])->prefix('koperasi')->group(function () {
+    Route::get('/dashboard', [KoperasiController::class, 'index'])->name('dashboard.koperasi');
+    Route::get('/riwayat', [KoperasiController::class, 'riwayat'])->name('koperasi.riwayat');
+    
+    // Rute CRUD RAT (Input RAT)
+    Route::get('/rat', [KoperasiController::class, 'inputRat'])->name('koperasi.input-rat');
+    Route::get('/rat/create', [KoperasiController::class, 'createRat'])->name('koperasi.rat.create');
+    Route::post('/rat/simpan', [KoperasiController::class, 'simpanRat'])->name('koperasi.rat.simpan');
+    Route::get('/rat/{id}/edit', [KoperasiController::class, 'editRat'])->name('koperasi.rat.edit');
+    Route::put('/rat/{id}', [KoperasiController::class, 'updateRat'])->name('koperasi.rat.update');
+    Route::delete('/rat/{id}', [KoperasiController::class, 'hapusRat'])->name('koperasi.rat.hapus');
 });
 
 // Grup Dashboard Internal (Admin, Pimpinan, Pengawas)
