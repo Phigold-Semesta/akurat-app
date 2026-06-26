@@ -7,7 +7,7 @@ use App\Http\Controllers\PimpinanController;
 use App\Http\Controllers\PengawasController;
 use App\Http\Controllers\KoperasiController;
 
-// Landing Page - Diarahkan otomatis ke Login Internal
+// Landing Page
 Route::get('/', function () {
     return redirect()->route('login.internal');
 });
@@ -41,5 +41,9 @@ Route::middleware(['auth:koperasi'])->prefix('koperasi')->group(function () {
 Route::middleware(['auth:internal'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('dashboard.admin');
     Route::get('/pimpinan/dashboard', [PimpinanController::class, 'index'])->name('dashboard.pimpinan');
+    
+    // Rute Dashboard & Verifikasi RAT Pengawas
     Route::get('/pengawas/dashboard', [PengawasController::class, 'index'])->name('dashboard.pengawas');
+    Route::get('/pengawas/verifikasi-rat', [PengawasController::class, 'indexVerifikasi'])->name('pengawas.rat.index');
+    Route::put('/pengawas/verifikasi-rat/{id}', [PengawasController::class, 'verifikasiRat'])->name('pengawas.rat.verifikasi');
 });

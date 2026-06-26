@@ -30,6 +30,7 @@ class Rat extends Model
         'tempat_rat',
         'jumlah_peserta',
         'file_dokumen',
+        'status_verifikasi',
         'hasil_rat',
     ];
 

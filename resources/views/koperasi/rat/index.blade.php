@@ -22,6 +22,7 @@
                     <th class="px-6 py-5 text-left font-bold uppercase text-xs">Tempat</th>
                     <th class="px-6 py-5 text-left font-bold uppercase text-xs">Peserta</th>
                     <th class="px-6 py-5 text-left font-bold uppercase text-xs">Dokumen</th>
+                    <th class="px-6 py-5 text-left font-bold uppercase text-xs">Status</th> 
                     <th class="px-6 py-5 text-right font-bold uppercase text-xs">Tindakan</th>
                 </tr>
             </thead>
@@ -43,24 +44,43 @@
                             <span class="text-slate-300 text-sm italic">Tidak ada</span>
                         @endif
                     </td>
+                    
+                    <td class="px-6 py-5">
+                        @if(($rat->status_verifikasi ?? 'menunggu') == 'terverifikasi')
+                            <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-bold text-xs flex items-center w-fit">
+                                <i class="fas fa-check-circle mr-1"></i> Terverifikasi
+                            </span>
+                        @else
+                            <span class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full font-bold text-xs flex items-center w-fit">
+                                <i class="fas fa-clock mr-1"></i> Menunggu Verifikasi
+                            </span>
+                        @endif
+                    </td>
+
                     <td class="px-6 py-5 text-right space-x-2">
-                        <a href="{{ route('koperasi.rat.edit', ['id' => $rat->id_rat]) }}" class="bg-amber-100 text-amber-700 hover:bg-amber-200 px-4 py-2 rounded-lg font-bold text-sm transition-all">
-                            <i class="fas fa-edit mr-1"></i> Edit
-                        </a>
-                        <form action="{{ route('koperasi.rat.hapus', ['id' => $rat->id_rat]) }}" method="POST" class="inline delete-form">
-                            @csrf @method('DELETE')
-                            <button type="button" class="bg-red-100 text-red-700 hover:bg-red-200 px-4 py-2 rounded-lg font-bold text-sm transition-all btn-delete">
-                                <i class="fas fa-trash-alt mr-1"></i> Hapus
-                            </button>
-                        </form>
+                        @if(($rat->status_verifikasi ?? 'menunggu') != 'terverifikasi')
+                            <a href="{{ route('koperasi.rat.edit', ['id' => $rat->id_rat]) }}" class="bg-amber-100 text-amber-700 hover:bg-amber-200 px-4 py-2 rounded-lg font-bold text-sm transition-all">
+                                <i class="fas fa-edit mr-1"></i> Edit
+                            </a>
+                            <form action="{{ route('koperasi.rat.hapus', ['id' => $rat->id_rat]) }}" method="POST" class="inline delete-form">
+                                @csrf @method('DELETE')
+                                <button type="button" class="bg-red-100 text-red-700 hover:bg-red-200 px-4 py-2 rounded-lg font-bold text-sm transition-all btn-delete">
+                                    <i class="fas fa-trash-alt mr-1"></i> Hapus
+                                </button>
+                            </form>
+                        @else
+                            <span class="text-slate-400 italic text-sm font-bold bg-slate-50 px-4 py-2 rounded-lg">
+                                <i class="fas fa-lock mr-1"></i> Terkunci
+                            </span>
+                        @endif
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="px-6 py-12 text-center text-slate-400">
+                    <td colspan="7" class="px-6 py-12 text-center text-slate-400">
                         <div class="flex flex-col items-center">
                             <i class="fas fa-folder-open text-4xl mb-3 opacity-20"></i>
-                            <p>Data laporan RAT belum tersedia untuk koperasi Anda.</p>
+                            <p>Data laporan RAT belum tersedia.</p>
                         </div>
                     </td>
                 </tr>
@@ -72,17 +92,10 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    // Notifikasi Sukses (Simpan/Update/Hapus)
     @if(session('success'))
-        Swal.fire({
-            icon: 'success',
-            title: 'Berhasil!',
-            text: "{{ session('success') }}",
-            confirmButtonColor: '#059669' // Emerald 600
-        });
+        Swal.fire({ icon: 'success', title: 'Berhasil!', text: "{{ session('success') }}", confirmButtonColor: '#059669' });
     @endif
 
-    // Konfirmasi Hapus
     document.querySelectorAll('.btn-delete').forEach(button => {
         button.addEventListener('click', function() {
             const form = this.closest('.delete-form');
@@ -95,9 +108,7 @@
                 cancelButtonColor: '#64748b',
                 confirmButtonText: 'Ya, hapus!'
             }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
-                }
+                if (result.isConfirmed) { form.submit(); }
             });
         });
     });
