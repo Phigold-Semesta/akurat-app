@@ -1,13 +1,16 @@
-@extends('layouts.app')
+@extends('layouts.app_koperasi')
 @section('title', 'Tambah RAT')
 
 @section('content')
 <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-sm border border-emerald-100 p-8">
+    <a href="{{ route('koperasi.input-rat') }}" class="inline-flex items-center text-emerald-700 font-bold mb-6 hover:text-emerald-900 transition-all">
+        <i class="fas fa-arrow-left mr-2"></i> Kembali ke Riwayat
+    </a>
+
     <h2 class="text-xl font-black text-emerald-900 mb-6 uppercase tracking-widest">Input Data RAT Baru</h2>
     
     <form action="{{ route('koperasi.rat.simpan') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
         @csrf
-        
         <div class="grid grid-cols-2 gap-4">
             <div>
                 <label class="block text-sm font-bold text-emerald-800 mb-2">Tahun Buku</label>
@@ -43,5 +46,5 @@
             SIMPAN DATA
         </button>
     </form> 
-    </div>
+</div>
 @endsection
