@@ -74,7 +74,7 @@ class KoperasiController extends Controller implements HasMiddleware
             'created_at'     => now(),
         ]);
 
-        return redirect()->route('koperasi.input-rat')->with('success', 'Data RAT & Dokumen berhasil ditambahkan!');
+        return redirect()->route('koperasi.input-rat')->with('success', 'Data RAT berhasil ditambahkan!');
     }
 
     public function editRat($id)

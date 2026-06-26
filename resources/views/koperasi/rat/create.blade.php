@@ -11,6 +11,7 @@
     
     <form action="{{ route('koperasi.rat.simpan') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
         @csrf
+        
         <div class="grid grid-cols-2 gap-4">
             <div>
                 <label class="block text-sm font-bold text-emerald-800 mb-2">Tahun Buku</label>
@@ -42,7 +43,7 @@
             <textarea name="hasil_rat" class="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-emerald-500" rows="4"></textarea>
         </div>
 
-        <button type="submit" class="w-full bg-emerald-900 text-white font-black py-4 rounded-xl hover:bg-emerald-800 transition-all shadow-lg">
+        <button type="submit" class="w-full bg-emerald-600 text-white font-black py-4 rounded-xl hover:bg-emerald-800 transition-all shadow-lg">
             SIMPAN DATA
         </button>
     </form> 

@@ -47,9 +47,9 @@
                         <a href="{{ route('koperasi.rat.edit', ['id' => $rat->id_rat]) }}" class="bg-amber-100 text-amber-700 hover:bg-amber-200 px-4 py-2 rounded-lg font-bold text-sm transition-all">
                             <i class="fas fa-edit mr-1"></i> Edit
                         </a>
-                        <form action="{{ route('koperasi.rat.hapus', ['id' => $rat->id_rat]) }}" method="POST" class="inline">
+                        <form action="{{ route('koperasi.rat.hapus', ['id' => $rat->id_rat]) }}" method="POST" class="inline delete-form">
                             @csrf @method('DELETE')
-                            <button class="bg-red-100 text-red-700 hover:bg-red-200 px-4 py-2 rounded-lg font-bold text-sm transition-all" onclick="return confirm('Yakin ingin menghapus?')">
+                            <button type="button" class="bg-red-100 text-red-700 hover:bg-red-200 px-4 py-2 rounded-lg font-bold text-sm transition-all btn-delete">
                                 <i class="fas fa-trash-alt mr-1"></i> Hapus
                             </button>
                         </form>
@@ -69,4 +69,37 @@
         </table>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Notifikasi Sukses (Simpan/Update/Hapus)
+    @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: "{{ session('success') }}",
+            confirmButtonColor: '#059669' // Emerald 600
+        });
+    @endif
+
+    // Konfirmasi Hapus
+    document.querySelectorAll('.btn-delete').forEach(button => {
+        button.addEventListener('click', function() {
+            const form = this.closest('.delete-form');
+            Swal.fire({
+                title: 'Anda yakin?',
+                text: "Data yang dihapus tidak dapat dikembalikan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Ya, hapus!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+</script>
 @endsection
