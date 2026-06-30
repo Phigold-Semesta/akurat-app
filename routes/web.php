@@ -51,4 +51,14 @@ Route::middleware(['auth:internal'])->group(function () {
     Route::get('/pengawas/dashboard', [PengawasController::class, 'index'])->name('dashboard.pengawas');
     Route::get('/pengawas/verifikasi-rat', [PengawasController::class, 'indexVerifikasi'])->name('pengawas.rat.index');
     Route::put('/pengawas/verifikasi-rat/{id}', [PengawasController::class, 'verifikasiRat'])->name('pengawas.rat.verifikasi');
+// Verifikasi Lapangan (Fitur Baru yang dihidupkan)
+Route::get('/pengawas/verifikasi-lapangan', [PengawasController::class, 'indexLapangan'])->name('pengawas.lapangan.index');
+
+// Data Koperasi (Menu Baru)
+Route::get('/pengawas/data-koperasi', [PengawasController::class, 'indexDataKoperasi'])->name('pengawas.koperasi.index');
+
+// Profil Pengawas (Menu Baru)
+Route::get('/pengawas/profil', [PengawasController::class, 'profilPengawas'])->name('pengawas.profil.index');
+
+Route::put('/pengawas/profil/update', [PengawasController::class, 'updateProfil'])->name('pengawas.profil.update');
 });
