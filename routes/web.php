@@ -35,6 +35,10 @@ Route::middleware(['auth:koperasi'])->prefix('koperasi')->group(function () {
     Route::get('/rat/{id}/edit', [KoperasiController::class, 'editRat'])->name('koperasi.rat.edit');
     Route::put('/rat/{id}', [KoperasiController::class, 'updateRat'])->name('koperasi.rat.update');
     Route::delete('/rat/{id}', [KoperasiController::class, 'hapusRat'])->name('koperasi.rat.hapus');
+
+    // --- Rute Baru: Menu PEMKES ---
+    Route::get('/pemkes', [KoperasiController::class, 'indexInputPemkes'])->name('koperasi.pemkes.index');
+    Route::post('/pemkes/store', [KoperasiController::class, 'storePemkes'])->name('koperasi.pemkes.store');
 });
 
 // Grup Dashboard Internal (Admin, Pimpinan, Pengawas)

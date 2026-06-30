@@ -35,6 +35,8 @@ class KoperasiController extends Controller implements HasMiddleware
         return view('koperasi.riwayat');
     }
 
+    // --- FITUR RAT ---
+
     public function inputRat()
     {
         $koperasiId = $this->getKoperasiId();
@@ -127,4 +129,42 @@ class KoperasiController extends Controller implements HasMiddleware
 
         return redirect()->route('koperasi.input-rat')->with('success', 'Data RAT berhasil dihapus!');
     }
+
+    // --- FITUR PEMKES (BARU DITAMBAHKAN) ---
+
+   public function indexInputPemkes()
+    {
+        $koperasiId = $this->getKoperasiId();
+        // Mengambil RAT terbaru koperasi untuk mendapatkan ID yang akan dihubungkan ke PEMKES
+        $rat = DB::table('rat')->where('id_koperasi', $koperasiId)->latest()->first();
+        
+        // Direvisi sesuai instruksi Anda: mengarah ke koperasi.pemkes.index
+        return view('koperasi.pemkes.index', compact('rat'));
+    }
+
+  public function storePemkes(Request $request)
+{
+    // Validasi dasar
+    $request->validate([
+        'id_rat'       => 'required|exists:rat,id_rat',
+        'skor_pemkes'  => 'required|numeric|min:0|max:100',
+        'catatan_jpfk' => 'required|string',
+    ]);
+
+    // EKSEKUSI: Masukkan data dengan mengisi kolom wajib (skor_jpfk) secara paksa
+    // EKSEKUSI: Masukkan data dengan mengisi semua kolom wajib
+   // EKSEKUSI: Masukkan data dengan mengisi semua kolom wajib
+    DB::table('pemkes')->insert([
+        'id_rat'           => $request->id_rat,
+        'skor_pemkes'      => $request->skor_pemkes,
+        'skor_jpfk'        => 0, 
+        'status_kesehatan' => 'Dalam Proses',
+        'tahun_penilaian'  => date('Y'), // Tambahkan kolom wajib ini! Menggunakan tahun sekarang
+        'catatan_jpfk'     => $request->catatan_jpfk,
+        'created_at'       => now(),
+        'updated_at'       => now(),
+    ]);
+
+    return redirect()->route('dashboard.koperasi')->with('success', 'Data PEMKES berhasil dikirim!');
 }
+   }

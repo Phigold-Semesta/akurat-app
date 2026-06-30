@@ -65,9 +65,9 @@
     <span class="nav-text ml-3 font-bold text-sm">Input RAT</span>
 </a>
 
-                <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10">
+                <a href="{{ route('koperasi.pemkes.index') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10">
                     <i class="fas fa-edit w-6 text-center"></i>
-                    <span class="nav-text ml-3 font-bold text-sm">Simpan Draft</span>
+                    <span class="nav-text ml-3 font-bold text-sm">Pemkes</span>
                 </a>
 
                 <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10">
