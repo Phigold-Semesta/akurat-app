@@ -60,24 +60,24 @@
 
                 <div class="menu-header px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-200/50 mt-4 transition-opacity">Menu Koperasi</div>
                 
-               <a href="{{ route('koperasi.input-rat') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10">
-    <i class="fas fa-file-upload w-6 text-center"></i>
-    <span class="nav-text ml-3 font-bold text-sm">Input RAT</span>
-</a>
+                <a href="{{ route('koperasi.input-rat') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10">
+                    <i class="fas fa-file-upload w-6 text-center"></i>
+                    <span class="nav-text ml-3 font-bold text-sm">Input RAT</span>
+                </a>
 
                 <a href="{{ route('koperasi.pemkes.index') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10">
                     <i class="fas fa-edit w-6 text-center"></i>
-                    <span class="nav-text ml-3 font-bold text-sm">Pemkes</span>
+                    <span class="nav-text ml-3 font-bold text-sm">Input Pemkes</span>
                 </a>
 
-                <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10">
-                    <i class="fas fa-history w-6 text-center"></i>
-                    <span class="nav-text ml-3 font-bold text-sm">Riwayat Penilaian</span>
+                <a href="{{ route('koperasi.hasil-penilaian') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10">
+                    <i class="fas fa-medal w-6 text-center"></i>
+                    <span class="nav-text ml-3 font-bold text-sm">Hasil Penilaian</span>
                 </a>
 
-                <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10">
-                    <i class="fas fa-download w-6 text-center"></i>
-                    <span class="nav-text ml-3 font-bold text-sm">Unduh Sertifikat</span>
+                <a href="{{ route('koperasi.profil') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10">
+                    <i class="fas fa-user-circle w-6 text-center"></i>
+                    <span class="nav-text ml-3 font-bold text-sm">Profil Koperasi</span>
                 </a>
             </nav>
 

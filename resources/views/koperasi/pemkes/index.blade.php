@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app_koperasi')
 @section('title', 'Input PEMKES')
 
 @section('content')

@@ -26,7 +26,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Grup Dashboard Koperasi
 Route::middleware(['auth:koperasi'])->prefix('koperasi')->group(function () {
     Route::get('/dashboard', [KoperasiController::class, 'index'])->name('dashboard.koperasi');
-    Route::get('/riwayat', [KoperasiController::class, 'riwayat'])->name('koperasi.riwayat');
+    Route::get('/profil', [KoperasiController::class, 'profilKoperasi'])->name('koperasi.profil');
+    Route::get('/hasil-penilaian', [KoperasiController::class, 'hasilPenilaian'])->name('koperasi.hasil-penilaian');
+    Route::get('/hasil-penilaian/unduh/{id}', [KoperasiController::class, 'unduhSertifikat'])->name('koperasi.unduh-sertifikat');
     
     // Rute CRUD RAT (Input RAT)
     Route::get('/rat', [KoperasiController::class, 'inputRat'])->name('koperasi.input-rat');
