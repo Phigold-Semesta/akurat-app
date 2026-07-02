@@ -52,16 +52,18 @@ class AdminController extends Controller implements HasMiddleware
     // 3. Data Wilayah
    // 3. Data Wilayah (Mengambil daftar kecamatan unik dari tabel koperasi)
     public function indexWilayah()
-    {
-        // Kita ambil daftar kecamatan yang unik agar tidak ada duplikasi
-        $wilayah = DB::table('koperasi')
-            ->select('kecamatan')
-            ->distinct()
-            ->orderBy('kecamatan', 'asc')
-            ->get();
+{
+    // Ambil data jumlah koperasi per kecamatan untuk warna peta
+    $statistik = DB::table('koperasi')
+        ->select('kecamatan', DB::raw('count(*) as total'))
+        ->groupBy('kecamatan')
+        ->get();
 
-        return view('admin.wilayah.index', compact('wilayah'));
-    }
+    // Data untuk tabel tetap ada
+    $wilayah = $statistik; 
+
+    return view('admin.wilayah.index', compact('wilayah'));
+}
     /**
      * Menampilkan daftar verifikasi koperasi.
      */
