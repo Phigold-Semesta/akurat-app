@@ -24,11 +24,55 @@ class PengawasController extends Controller implements HasMiddleware
     /**
      * Menampilkan dashboard utama untuk aktor Pengawas.
      */
-    public function index()
-    {
-        return view('pengawas.dashboard');
-    }
+   /**
+ * Menampilkan dashboard utama untuk aktor Pengawas dengan data dinamis.
+ */
+/**
+ * Menampilkan dashboard utama untuk aktor Pengawas dengan data dinamis.
+ */
+public function index()
+{
+    // 1. Mengambil data statistik kartu
+    $totalKoperasi = DB::table('koperasi')->count(); // Variabel baru untuk jumlah koperasi
+    $skorRataRata = DB::table('pemkes')->avg('skor_pemkes') ?? 0;
+    $statusRataRata = $skorRataRata > 80 ? 'Sangat Sehat' : ($skorRataRata > 60 ? 'Cukup Sehat' : 'Tidak Sehat');
+    $skorTertinggi = DB::table('pemkes')->max('skor_pemkes') ?? 0;
+    $skorTerendah = DB::table('pemkes')->min('skor_pemkes') ?? 0;
+    $totalDinilai = DB::table('pemkes')->count();
 
+    // 2. Data untuk Grafik Distribusi Kesehatan
+    $distribusi = DB::table('pemkes')
+        ->select('status_kesehatan', DB::raw('count(*) as total'))
+        ->groupBy('status_kesehatan')
+        ->get();
+    
+    $distribusiLabels = $distribusi->pluck('status_kesehatan');
+    $distribusiData = $distribusi->pluck('total');
+
+    // 3. Data untuk Tren Skor (Contoh: tren per bulan)
+    $trend = DB::table('pemkes')
+        ->select(DB::raw('MONTHNAME(created_at) as bulan'), DB::raw('AVG(skor_pemkes) as rata_skor'))
+        ->groupBy('bulan')
+        ->orderBy(DB::raw('MIN(created_at)'))
+        ->get();
+
+    $trendLabels = $trend->pluck('bulan');
+    $trendData = $trend->pluck('rata_skor');
+
+    // 4. Data untuk Tabel Koperasi
+    $koperasiList = DB::table('pemkes')
+        ->join('rat', 'pemkes.id_rat', '=', 'rat.id_rat')
+        ->join('koperasi', 'rat.id_koperasi', '=', 'koperasi.id_koperasi')
+        ->select('koperasi.nama_koperasi', 'pemkes.skor_pemkes', 'pemkes.status_kesehatan')
+        ->limit(8)
+        ->get();
+
+    return view('pengawas.dashboard', compact(
+        'totalKoperasi', 'skorRataRata', 'statusRataRata', 'skorTertinggi', 'skorTerendah', 
+        'totalDinilai', 'distribusiLabels', 'distribusiData', 
+        'trendLabels', 'trendData', 'koperasiList'
+    ));
+}
     /**
      * Menampilkan daftar RAT untuk diverifikasi oleh Pengawas.
      */

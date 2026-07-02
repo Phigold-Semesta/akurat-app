@@ -1,34 +1,19 @@
 @extends('layouts.app')
-
-@section('title', 'Dashboard')
+@section('title', 'Dashboard Pengawas')
 
 @section('content')
 <div class="space-y-6">
-    <div class="bg-white dark:bg-emerald-950 p-6 rounded-2xl shadow-sm border border-emerald-100 dark:border-emerald-800">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <select class="p-3 rounded-xl border border-emerald-200 dark:bg-emerald-900 dark:border-emerald-700 dark:text-white">
-                <option>2025</option>
-            </select>
-            <select class="p-3 rounded-xl border border-emerald-200 dark:bg-emerald-900 dark:border-emerald-700 dark:text-white">
-                <option>Semua Kecamatan</option>
-            </select>
-            <input type="text" placeholder="Cari nama koperasi..." class="p-3 rounded-xl border border-emerald-200 dark:bg-emerald-900 dark:border-emerald-700 dark:text-white placeholder:dark:text-emerald-400">
-            <button class="bg-emerald-600 text-white py-3 rounded-xl font-bold hover:bg-emerald-700 transition-all flex items-center justify-center gap-2">
-                <i class="fas fa-filter"></i> Filter
-            </button>
-        </div>
-    </div>
-
+    <!-- Statistik Kartu (Dinamis) -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
         @php
-            $summaries = [
-                ['title' => 'Rata-rata Skor', 'value' => '78,45', 'cat' => 'Cukup Sehat', 'icon' => 'fa-chart-line', 'color' => 'emerald'],
-                ['title' => 'Skor Tertinggi', 'value' => '95,20', 'cat' => 'Sangat Sehat', 'icon' => 'fa-trophy', 'color' => 'blue'],
-                ['title' => 'Skor Terendah', 'value' => '45,30', 'cat' => 'Tidak Sehat', 'icon' => 'fa-exclamation-triangle', 'color' => 'yellow'],
-                ['title' => 'Total Dinilai', 'value' => '75', 'cat' => '58.6% dari 128', 'icon' => 'fa-building', 'color' => 'purple'],
+            $stats = [
+                ['title' => 'Rata-rata Skor', 'value' => number_format($skorRataRata, 2), 'cat' => $statusRataRata, 'icon' => 'fa-chart-line', 'color' => 'emerald'],
+                ['title' => 'Skor Tertinggi', 'value' => number_format($skorTertinggi, 2), 'cat' => 'Sangat Sehat', 'icon' => 'fa-trophy', 'color' => 'blue'],
+                ['title' => 'Total Koperasi', 'value' => $totalKoperasi, 'cat' => 'Terdaftar di Sistem', 'icon' => 'fa-building', 'color' => 'yellow'],
+                ['title' => 'Total Dinilai', 'value' => $totalDinilai, 'cat' => 'Koperasi Terverifikasi', 'icon' => 'fa-check-double', 'color' => 'purple'],
             ];
         @endphp
-        @foreach($summaries as $item)
+        @foreach($stats as $item)
         <div class="bg-white dark:bg-emerald-950 p-6 rounded-2xl border border-emerald-100 dark:border-emerald-800 shadow-sm">
             <div class="flex justify-between items-start mb-4">
                 <div class="text-sm font-bold text-emerald-900 dark:text-emerald-100">{{ $item['title'] }}</div>
@@ -40,6 +25,7 @@
         @endforeach
     </div>
 
+    <!-- Chart & Info -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="lg:col-span-1 space-y-6">
             <div class="bg-white dark:bg-emerald-950 p-6 rounded-2xl shadow-sm border border-emerald-100 dark:border-emerald-800">
@@ -66,15 +52,15 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y dark:divide-emerald-800">
-                        @for($i=1; $i<=8; $i++)
+                        @foreach($koperasiList as $index => $item)
                         <tr class="hover:bg-emerald-50 dark:hover:bg-emerald-900 transition-all">
-                            <td class="py-4">{{ $i }}</td>
-                            <td class="py-4 font-bold">Koperasi Contoh {{ $i }}</td>
-                            <td class="py-4 font-bold">75,00</td>
-                            <td class="py-4"><span class="px-3 py-1 bg-emerald-100 dark:bg-emerald-800 text-emerald-700 dark:text-emerald-300 rounded-full text-[10px] font-bold">Sudah Dinilai</span></td>
-                            <td class="py-4"><i class="fas fa-eye text-emerald-600 dark:text-emerald-400 cursor-pointer"></i></td>
+                            <td class="py-4">{{ $index + 1 }}</td>
+                            <td class="py-4 font-bold">{{ $item->nama_koperasi }}</td>
+                            <td class="py-4 font-bold">{{ number_format($item->skor_pemkes, 2) }}</td>
+                            <td class="py-4"><span class="px-3 py-1 bg-emerald-100 dark:bg-emerald-800 text-emerald-700 dark:text-emerald-300 rounded-full text-[10px] font-bold">{{ $item->status_kesehatan }}</span></td>
+                            <td class="py-4"><a href="#"><i class="fas fa-eye text-emerald-600 dark:text-emerald-400 cursor-pointer"></i></a></td>
                         </tr>
-                        @endfor
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -84,40 +70,33 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Konfigurasi Chart Kesehatan (Doughnut)
     const healthCtx = document.getElementById('healthChart').getContext('2d');
     new Chart(healthCtx, {
         type: 'doughnut',
         data: {
-            labels: ['Sangat Sehat', 'Sehat', 'Cukup Sehat', 'Tidak Sehat'],
+            labels: {!! json_encode($distribusiLabels) !!},
             datasets: [{
-                data: [12, 28, 24, 11],
+                data: {!! json_encode($distribusiData) !!},
                 backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444']
             }]
         },
-        options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8' } } } }
+        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
     });
 
-    // Konfigurasi Chart Tren (Line)
     const trendCtx = document.getElementById('trendChart').getContext('2d');
     new Chart(trendCtx, {
         type: 'line',
         data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
+            labels: {!! json_encode($trendLabels) !!},
             datasets: [{
-                label: 'Skor Rata-rata',
-                data: [65, 70, 72, 75, 78, 79],
+                data: {!! json_encode($trendData) !!},
                 borderColor: '#10b981',
                 tension: 0.4,
                 fill: true,
                 backgroundColor: 'rgba(16, 185, 129, 0.1)'
             }]
         },
-        options: { 
-            responsive: true, 
-            plugins: { legend: { display: false } },
-            scales: { y: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } }, x: { ticks: { color: '#94a3b8' } } }
-        }
+        options: { responsive: true, plugins: { legend: { display: false } } }
     });
 </script>
 @endsection
