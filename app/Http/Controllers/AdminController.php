@@ -24,22 +24,31 @@ class AdminController extends Controller implements HasMiddleware
     /**
      * Menampilkan dashboard admin.
      */
-   public function index()
+ public function index()
 {
-    // Mengambil data real dari database
+    // 1. Mengambil data real dari database
     $totalKoperasi = DB::table('koperasi')->count();
     $totalPengguna = DB::table('user')->count(); // Sesuai nama tabel di image_6cda0c.png
     $totalRAT = DB::table('rat')->count();
     $totalVerifikasi = DB::table('verifikasi_rat')->count();
 
-    // Data untuk grafik distribusi kesehatan
+    // 2. Data untuk grafik distribusi kesehatan
     $distribusiKesehatan = DB::table('pemkes')
         ->select('status_kesehatan', DB::raw('count(*) as total'))
         ->groupBy('status_kesehatan')
         ->get();
 
+    // 3. Data untuk Tabel Hasil Penilaian Koperasi (Dinamis)
+    $koperasiList = DB::table('pemkes')
+        ->join('rat', 'pemkes.id_rat', '=', 'rat.id_rat')
+        ->join('koperasi', 'rat.id_koperasi', '=', 'koperasi.id_koperasi')
+        ->select('koperasi.nama_koperasi', 'pemkes.skor_pemkes', 'pemkes.status_kesehatan')
+        ->limit(8)
+        ->get();
+
     return view('admin.dashboard', compact(
-        'totalKoperasi', 'totalPengguna', 'totalRAT', 'totalVerifikasi', 'distribusiKesehatan'
+        'totalKoperasi', 'totalPengguna', 'totalRAT', 'totalVerifikasi', 
+        'distribusiKesehatan', 'koperasiList'
     ));
 }
 

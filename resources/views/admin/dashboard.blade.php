@@ -57,12 +57,45 @@
             <h3 class="font-black text-emerald-900 dark:text-white mb-4 uppercase">Distribusi Kesehatan</h3>
             <canvas id="healthChart" class="w-full"></canvas>
         </div>
-        <div class="lg:col-span-2 bg-emerald-600 p-8 rounded-2xl shadow-xl flex items-center justify-between">
-            <div class="text-white">
-                <h2 class="text-2xl font-black uppercase mb-2">Selamat Datang, Admin!</h2>
-                <p class="font-bold opacity-80">Sistem informasi monitoring koperasi AKURAT v1.0 dalam kondisi optimal.</p>
+        
+        <div class="lg:col-span-2 space-y-6">
+            <!-- Banner Selamat Datang -->
+            <div class="bg-emerald-600 p-8 rounded-2xl shadow-xl flex items-center justify-between">
+                <div class="text-white">
+                    <h2 class="text-2xl font-black uppercase mb-2">Selamat Datang, Admin!</h2>
+                    <p class="font-bold opacity-80">Sistem informasi monitoring koperasi AKURAT dalam kondisi optimal.</p>
+                </div>
+                <i class="fas fa-chart-pie text-6xl text-white/20"></i>
             </div>
-            <i class="fas fa-chart-pie text-6xl text-white/20"></i>
+
+            <!-- Tabel Hasil Penilaian -->
+            <div class="bg-white dark:bg-emerald-950 p-8 rounded-2xl shadow-sm border border-emerald-100 dark:border-emerald-800">
+                <h3 class="font-black text-emerald-900 dark:text-white mb-6 uppercase">Daftar Hasil Penilaian Koperasi</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="text-emerald-500 uppercase text-xs border-b dark:border-emerald-800">
+                            <tr>
+                                <th class="pb-4">No</th>
+                                <th class="pb-4">Nama Koperasi</th>
+                                <th class="pb-4">Skor</th>
+                                <th class="pb-4">Status</th>
+                                <th class="pb-4">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y dark:divide-emerald-800 text-emerald-900 dark:text-emerald-100">
+                            @foreach($koperasiList as $index => $item)
+                            <tr class="hover:bg-emerald-50 dark:hover:bg-emerald-900 transition-all">
+                                <td class="py-4 font-bold">{{ $index + 1 }}</td>
+                                <td class="py-4 font-bold">{{ $item->nama_koperasi }}</td>
+                                <td class="py-4 font-bold">{{ number_format($item->skor_pemkes, 2) }}</td>
+                                <td class="py-4"><span class="px-3 py-1 bg-emerald-100 dark:bg-emerald-800 text-emerald-700 dark:text-emerald-300 rounded-full text-[10px] font-bold">{{ $item->status_kesehatan }}</span></td>
+                                <td class="py-4"><i class="fas fa-eye text-emerald-600 dark:text-emerald-400 cursor-pointer"></i></td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -79,12 +112,7 @@
                 backgroundColor: ['#10b981', '#f59e0b', '#ef4444']
             }]
         },
-        options: { 
-            responsive: true, 
-            plugins: { 
-                legend: { position: 'bottom', labels: { color: '#94a3b8' } } 
-            } 
-        }
+        options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8' } } } }
     });
 </script>
 @endsection
