@@ -46,6 +46,9 @@ Route::middleware(['auth:koperasi'])->prefix('koperasi')->group(function () {
 // Grup Dashboard Internal (Admin, Pimpinan, Pengawas)
 Route::middleware(['auth:internal'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('dashboard.admin');
+    // --- Rute Manajemen Verifikasi (AKURAT) ---
+    Route::get('/admin/verifikasi', [AdminController::class, 'indexVerifikasi'])->name('admin.verifikasi.index');
+    Route::post('/admin/verifikasi/{id}', [AdminController::class, 'prosesVerifikasi'])->name('admin.verifikasi.proses');
 
     Route::get('/pimpinan/dashboard', [PimpinanController::class, 'index'])->name('dashboard.pimpinan');
    

@@ -181,7 +181,8 @@ class KoperasiController extends Controller implements HasMiddleware
 
         if ($data->file_sertifikat && Storage::disk('public')->exists($data->file_sertifikat)) {
             // Ganti bagian return menjadi seperti ini:
-return Storage::download('public/' . $data->file_sertifikat);
+// Ganti baris 185 menjadi:
+return response()->download(storage_path('app/public/' . $data->file_sertifikat));
         }
 
         return redirect()->back()->with('error', 'Sertifikat belum tersedia atau tidak ditemukan.');
