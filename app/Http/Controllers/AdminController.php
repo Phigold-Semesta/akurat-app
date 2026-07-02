@@ -24,14 +24,24 @@ class AdminController extends Controller implements HasMiddleware
     /**
      * Menampilkan dashboard admin.
      */
-    public function index()
-    {
-        // Hitung total pengajuan untuk dashboard
-        $totalPengajuan = DB::table('pemkes')->count();
-        $diproses = DB::table('pemkes')->where('status_kesehatan', 'Dalam Proses')->count();
-        
-        return view('admin.dashboard', compact('totalPengajuan', 'diproses'));
-    }
+   public function index()
+{
+    // Mengambil data real dari database
+    $totalKoperasi = DB::table('koperasi')->count();
+    $totalPengguna = DB::table('user')->count(); // Sesuai nama tabel di image_6cda0c.png
+    $totalRAT = DB::table('rat')->count();
+    $totalVerifikasi = DB::table('verifikasi_rat')->count();
+
+    // Data untuk grafik distribusi kesehatan
+    $distribusiKesehatan = DB::table('pemkes')
+        ->select('status_kesehatan', DB::raw('count(*) as total'))
+        ->groupBy('status_kesehatan')
+        ->get();
+
+    return view('admin.dashboard', compact(
+        'totalKoperasi', 'totalPengguna', 'totalRAT', 'totalVerifikasi', 'distribusiKesehatan'
+    ));
+}
 
 // --- MANAJEMEN MENU ADMINISTRASI (Baru) ---
 

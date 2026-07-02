@@ -75,45 +75,43 @@
                     $role = trim(strtolower(auth()->user()->role ?? '')); 
                 @endphp
 
-                <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10">
-                    <i class="fas fa-chart-line w-6 text-center shrink-0"></i>
-                    <span class="nav-text ml-3 font-bold text-sm tracking-wide">Dashboard</span>
-                </a>
-
-                @if($role === 'admin_dinas' || $role === 'admin')
+                @if($role === 'admin' || $role === 'admin_dinas')
+                    <a href="{{ route('admin.dashboard') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all {{ request()->routeIs('admin.dashboard') ? 'sidebar-active text-white' : 'text-white/80 hover:text-white hover:bg-white/10' }}">
+                        <i class="fas fa-chart-line w-6 text-center shrink-0"></i><span class="nav-text ml-3 font-bold text-sm tracking-wide">Dashboard</span>
+                    </a>
                     <div class="menu-header px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-200/50 mt-4 transition-opacity">Manajemen Data</div>
                     <a href="{{ route('admin.pengguna.index') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-users w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Data Pengguna</span></a>
                     <a href="{{ route('admin.koperasi.index') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-building w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Data Koperasi</span></a>
                     <a href="{{ route('admin.wilayah.index') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-map-marked-alt w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Data Wilayah</span></a>
                     <div class="menu-header px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-200/50 transition-opacity">Laporan</div>
                     <a href="{{ route('admin.verifikasi.index') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-file-invoice w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Data RAT</span></a>
-                    
 
                 @elseif($role === 'koperasi')
+                    <a href="{{ route('dashboard.koperasi') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10">
+                        <i class="fas fa-chart-line w-6 text-center shrink-0"></i><span class="nav-text ml-3 font-bold text-sm tracking-wide">Dashboard</span>
+                    </a>
                     <div class="menu-header px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-200/50 mt-4 transition-opacity">Modul Koperasi</div>
                     <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-file-upload w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Laporan RAT</span></a>
                     <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-notes-medical w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">PEMKES</span></a>
                     <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-medal w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Hasil Penilaian</span></a>
                     <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-user-circle w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Profil Koperasi</span></a>
 
-                @elseif($role === 'pengawas_lapangan' || $role === 'pengawas')
+                @elseif($role === 'pengawas' || $role === 'pengawas_lapangan')
+                    <a href="{{ route('pengawas.dashboard') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all {{ request()->routeIs('pengawas.dashboard') ? 'sidebar-active text-white' : 'text-white/80 hover:text-white hover:bg-white/10' }}">
+                        <i class="fas fa-chart-line w-6 text-center shrink-0"></i><span class="nav-text ml-3 font-bold text-sm tracking-wide">Dashboard</span>
+                    </a>
                     <div class="menu-header px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-200/50 mt-4 transition-opacity">Tugas Pengawasan</div>
-                    <a href="{{ route('pengawas.rat.index') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-check-double w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Verifikasi RAT</span></a>
-                    <a href="{{ route('pengawas.lapangan.index') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-clipboard-check w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Verifikasi Lapangan</span></a>
-                    <a href="{{ route('pengawas.koperasi.index') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all {{ request()->routeIs('pengawas.koperasi.index') ? 'sidebar-active text-white' : 'text-white/80 hover:text-white hover:bg-white/10' }}">
-    <i class="fas fa-building w-6 text-center shrink-0"></i>
-    <span class="nav-text ml-3 text-sm">Data Koperasi</span>
-</a>
-
-<a href="{{ route('pengawas.profil.index') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all {{ request()->routeIs('pengawas.profil.index') ? 'sidebar-active text-white' : 'text-white/80 hover:text-white hover:bg-white/10' }}">
-    <i class="fas fa-user-shield w-6 text-center shrink-0"></i>
-    <span class="nav-text ml-3 text-sm">Profil Pengawas</span>
-</a>
+                    <a href="{{ route('pengawas.rat.index') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all {{ request()->routeIs('pengawas.rat.*') ? 'sidebar-active text-white' : 'text-white/80 hover:text-white hover:bg-white/10' }}"><i class="fas fa-check-double w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Verifikasi RAT</span></a>
+                    <a href="{{ route('pengawas.lapangan.index') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all {{ request()->routeIs('pengawas.lapangan.*') ? 'sidebar-active text-white' : 'text-white/80 hover:text-white hover:bg-white/10' }}"><i class="fas fa-clipboard-check w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Verifikasi Lapangan</span></a>
+                    <a href="{{ route('pengawas.koperasi.index') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all {{ request()->routeIs('pengawas.koperasi.*') ? 'sidebar-active text-white' : 'text-white/80 hover:text-white hover:bg-white/10' }}"><i class="fas fa-building w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Data Koperasi</span></a>
+                    <a href="{{ route('pengawas.profil.index') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all {{ request()->routeIs('pengawas.profil.*') ? 'sidebar-active text-white' : 'text-white/80 hover:text-white hover:bg-white/10' }}"><i class="fas fa-user-shield w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Profil Pengawas</span></a>
 
                 @elseif($role === 'pimpinan')
+                    <a href="{{ route('pimpinan.dashboard') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all {{ request()->routeIs('pimpinan.dashboard') ? 'sidebar-active text-white' : 'text-white/80 hover:text-white hover:bg-white/10' }}">
+                        <i class="fas fa-chart-line w-6 text-center shrink-0"></i><span class="nav-text ml-3 font-bold text-sm tracking-wide">Dashboard</span>
+                    </a>
                     <div class="menu-header px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-200/50 mt-4 transition-opacity">Monitoring</div>
                     <a href="{{ route('pimpinan.laporan.index') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-file-alt w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Tinjau Laporan</span></a>
-                    
                 @endif
             </nav>
 
@@ -130,14 +128,9 @@
             <header class="h-20 bg-white dark:bg-emerald-900 border-b border-emerald-100 dark:border-emerald-800 flex justify-between items-center px-10 shrink-0">
                 <h1 class="text-2xl font-black uppercase tracking-tighter italic text-emerald-900 dark:text-white">@yield('title')</h1>
                 <div class="flex items-center gap-4">
-                    <!-- Badge Role Dinamis -->
-                    <span class="px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-lg 
-                        {{ $role == 'admin' || $role == 'admin_dinas' ? 'bg-red-100 text-red-600' : 
-                          ($role == 'pimpinan' ? 'bg-blue-100 text-blue-600' : 
-                          ($role == 'pengawas' || $role == 'pengawas_lapangan' ? 'bg-amber-100 text-amber-600' : 'bg-emerald-100 text-emerald-600')) }}">
+                    <span class="px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-lg {{ $role == 'admin' || $role == 'admin_dinas' ? 'bg-red-100 text-red-600' : ($role == 'pimpinan' ? 'bg-blue-100 text-blue-600' : ($role == 'pengawas' || $role == 'pengawas_lapangan' ? 'bg-amber-100 text-amber-600' : 'bg-emerald-100 text-emerald-600')) }}">
                         {{ str_replace('_', ' ', $role) }}
                     </span>
-                    
                     <button @click="toggleTheme()" class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-800 flex items-center justify-center hover:scale-105 transition-all text-emerald-600 dark:text-yellow-400">
                         <i x-show="!darkMode" class="fas fa-moon"></i>
                         <i x-show="darkMode" class="fas fa-sun" x-cloak></i>
@@ -172,7 +165,6 @@
             })
         }
     </script>
-
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </body>
 </html>
