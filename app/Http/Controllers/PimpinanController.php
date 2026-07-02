@@ -28,10 +28,29 @@ class PimpinanController extends Controller implements HasMiddleware
     /**
      * Menampilkan dashboard utama untuk aktor Pimpinan.
      */
-    public function index()
-    {
-        return view('pimpinan.dashboard');
-    }
+  public function index()
+{
+    // 1. Statistik Kartu
+    $totalTerverifikasi = DB::table('pemkes')->where('status_kesehatan', '!=', 'Dalam Proses')->count();
+    $totalRAT = DB::table('rat')->count();
+    $skorRataRata = DB::table('pemkes')->avg('skor_pemkes') ?? 0;
+
+    // 2. Data Chart Distribusi Kesehatan
+    $distribusi = DB::table('pemkes')
+        ->select('status_kesehatan', DB::raw('count(*) as total'))
+        ->groupBy('status_kesehatan')
+        ->get();
+
+    // 3. Data Tabel Koperasi Terverifikasi
+    $koperasiList = DB::table('pemkes')
+        ->join('rat', 'pemkes.id_rat', '=', 'rat.id_rat')
+        ->join('koperasi', 'rat.id_koperasi', '=', 'koperasi.id_koperasi')
+        ->select('koperasi.nama_koperasi', 'pemkes.skor_pemkes', 'pemkes.status_kesehatan')
+        ->limit(10)
+        ->get();
+
+    return view('pimpinan.dashboard', compact('totalTerverifikasi', 'totalRAT', 'skorRataRata', 'distribusi', 'koperasiList'));
+}
 
     /**
      * Menampilkan daftar semua laporan RAT untuk ditinjau oleh Pimpinan.
