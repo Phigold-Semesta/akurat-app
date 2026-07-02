@@ -5,9 +5,57 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+use App\Models\Koperasi;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
+
+public function showSignup()
+{
+    return view('auth.signup');
+}
+
+public function registerKoperasi(Request $request)
+{
+    $request->validate([
+        'nama_koperasi' => ['required', 'string', 'max:255'],
+        'email'         => ['required', 'string', 'email', 'max:255', 'unique:user'],
+        'password'      => ['required', 'confirmed', 'min:8'],
+    ]);
+
+    // 1. Simpan ke tabel user (pastikan role adalah 'koperasi')
+    $user = DB::table('user')->insertGetId([
+        'username'     => $request->nama_koperasi,
+        'email'    => $request->email,
+        'password' => Hash::make($request->password),
+        'role'     => 'koperasi',
+        'created_at' => now(),
+    ]);
+
+   // 2. Buat profil koperasi kosong di tabel koperasi (untuk sinkronisasi)
+// 2. Buat profil koperasi kosong di tabel koperasi
+DB::table('koperasi')->insert([
+    'id_user'         => $user,
+    'nama_koperasi'   => $request->nama_koperasi,
+    'no_badan_hukum'  => '-', 
+    'alamat'          => '-', 
+    'kecamatan'       => '-', 
+    'tgl_berdiri'     => '2000-01-01', 
+    'status_koperasi' => 'Aktif', 
+    'jumlah_anggota'  => 0, // Tambahkan nilai default untuk jumlah anggota
+    'ketua'           => '-', // Tambahkan jika kolom ini wajib diisi
+    'sekretaris'      => '-', // Tambahkan jika kolom ini wajib diisi
+    'bendahara'       => '-', // Tambahkan jika kolom ini wajib diisi
+    'created_at'      => now(),
+]);
+
+// ... di dalam fungsi registerKoperasi ...
+return redirect()->route('login.koperasi')->with('status', 'registrasi_berhasil');
+}
+
     /**
      * Menampilkan form login internal.
      */

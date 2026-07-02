@@ -141,7 +141,7 @@
 
             <div class="mt-6 text-center">
                 <p class="text-xs sm:text-sm text-gray-600">
-                    Koperasi baru? <a href="#" class="font-bold text-emerald-600 hover:underline">Registrasi Koperasi</a>
+                    Koperasi baru? <a href="{{ route('signup') }}" class="font-bold text-emerald-600 hover:underline">Registrasi Koperasi</a>
                 </p>
             </div>
         </div>

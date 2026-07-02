@@ -209,4 +209,43 @@ return response()->download(storage_path('app/public/' . $data->file_sertifikat)
         $profil = DB::table('koperasi')->where('id_koperasi', $koperasiId)->first();
         return view('koperasi.profil.index', compact('profil'));
     }
+
+
+    public function updateProfil(Request $request)
+    {
+        $koperasiId = $this->getKoperasiId();
+        
+        if (!$koperasiId) {
+            return redirect()->back()->with('error', 'Profil tidak ditemukan.');
+        }
+
+        // Validasi input profil
+        $request->validate([
+            'nama_koperasi'  => 'required|string|max:255',
+            'no_badan_hukum' => 'required|string|max:100',
+            'alamat'         => 'required|string',
+            'kecamatan'      => 'required|string|max:100',
+            'tgl_berdiri'    => 'required|date',
+            'jumlah_anggota' => 'required|integer|min:0',
+            'ketua'          => 'required|string|max:255',
+            'sekretaris'     => 'required|string|max:255',
+            'bendahara'      => 'required|string|max:255',
+        ]);
+
+        // Update data ke tabel koperasi
+        DB::table('koperasi')->where('id_koperasi', $koperasiId)->update([
+            'nama_koperasi'  => $request->nama_koperasi,
+            'no_badan_hukum' => $request->no_badan_hukum,
+            'alamat'         => $request->alamat,
+            'kecamatan'      => $request->kecamatan,
+            'tgl_berdiri'    => $request->tgl_berdiri,
+            'jumlah_anggota' => $request->jumlah_anggota,
+            'ketua'          => $request->ketua,
+            'sekretaris'     => $request->sekretaris,
+            'bendahara'      => $request->bendahara,
+            'updated_at'     => now(),
+        ]);
+
+        return redirect()->route('koperasi.profil')->with('success', 'Profil koperasi berhasil diperbarui!');
+    }
 }

@@ -15,6 +15,10 @@ Route::get('/', function () {
 // Auth Routes: Menampilkan form login
 Route::get('/login/internal', [AuthController::class, 'showLoginInternal'])->name('login.internal');
 Route::get('/login/koperasi', [AuthController::class, 'showLoginKoperasi'])->name('login.koperasi');
+// Rute Signup
+Route::get('/signup', [AuthController::class, 'showSignup'])->name('signup');
+Route::post('/signup', [AuthController::class, 'registerKoperasi']);
+
 
 // Auth Routes: Memproses logika login
 Route::post('/login/internal', [AuthController::class, 'loginInternal']);
@@ -27,6 +31,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth:koperasi'])->prefix('koperasi')->group(function () {
     Route::get('/dashboard', [KoperasiController::class, 'index'])->name('dashboard.koperasi');
     Route::get('/profil', [KoperasiController::class, 'profilKoperasi'])->name('koperasi.profil');
+    // Tambahkan rute ini:
+    Route::post('/koperasi/profil/update', [App\Http\Controllers\KoperasiController::class, 'updateProfil'])->name('koperasi.profil.update');
     Route::get('/hasil-penilaian', [KoperasiController::class, 'hasilPenilaian'])->name('koperasi.hasil-penilaian');
     Route::get('/hasil-penilaian/unduh/{id}', [KoperasiController::class, 'unduhSertifikat'])->name('koperasi.unduh-sertifikat');
     
