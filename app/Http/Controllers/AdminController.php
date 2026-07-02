@@ -33,6 +33,35 @@ class AdminController extends Controller implements HasMiddleware
         return view('admin.dashboard', compact('totalPengajuan', 'diproses'));
     }
 
+// --- MANAJEMEN MENU ADMINISTRASI (Baru) ---
+
+    // 1. Data Pengguna
+    public function indexPengguna()
+    {
+        $users = DB::table('user')->get(); // Sesuaikan dengan tabel user Anda
+        return view('admin.pengguna.index', compact('users'));
+    }
+
+    // 2. Data Koperasi
+    public function indexKoperasi()
+    {
+        $koperasi = DB::table('koperasi')->get();
+        return view('admin.koperasi.index', compact('koperasi'));
+    }
+
+    // 3. Data Wilayah
+   // 3. Data Wilayah (Mengambil daftar kecamatan unik dari tabel koperasi)
+    public function indexWilayah()
+    {
+        // Kita ambil daftar kecamatan yang unik agar tidak ada duplikasi
+        $wilayah = DB::table('koperasi')
+            ->select('kecamatan')
+            ->distinct()
+            ->orderBy('kecamatan', 'asc')
+            ->get();
+
+        return view('admin.wilayah.index', compact('wilayah'));
+    }
     /**
      * Menampilkan daftar verifikasi koperasi.
      */

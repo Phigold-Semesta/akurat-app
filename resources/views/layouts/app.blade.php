@@ -80,12 +80,12 @@
 
                 @if($role === 'admin_dinas' || $role === 'admin')
                     <div class="menu-header px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-200/50 mt-4 transition-opacity">Manajemen Data</div>
-                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-users w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Data Pengguna</span></a>
-                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-building w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Data Koperasi</span></a>
-                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-map-marked-alt w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Data Wilayah</span></a>
+                    <a href="{{ route('admin.pengguna.index') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-users w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Data Pengguna</span></a>
+                    <a href="{{ route('admin.koperasi.index') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-building w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Data Koperasi</span></a>
+                    <a href="{{ route('admin.wilayah.index') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-map-marked-alt w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Data Wilayah</span></a>
                     <div class="menu-header px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-200/50 transition-opacity">Laporan</div>
                     <a href="{{ route('admin.verifikasi.index') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-file-invoice w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Data RAT</span></a>
-                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-history w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Audit Log</span></a>
+                    
 
                 @elseif($role === 'koperasi')
                     <div class="menu-header px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-200/50 mt-4 transition-opacity">Modul Koperasi</div>
