@@ -113,7 +113,7 @@
                 @elseif($role === 'pimpinan')
                     <div class="menu-header px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-200/50 mt-4 transition-opacity">Monitoring</div>
                     <a href="{{ route('pimpinan.laporan.index') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-file-alt w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Tinjau Laporan</span></a>
-                    <a href="#" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-shield-alt w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Data Terverifikasi</span></a>
+                    
                 @endif
             </nav>
 
