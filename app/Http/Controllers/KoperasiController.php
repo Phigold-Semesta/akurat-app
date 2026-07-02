@@ -25,10 +25,25 @@ class KoperasiController extends Controller implements HasMiddleware
         return $koperasi ? $koperasi->id_koperasi : null;
     }
 
-    public function index()
-    {
-        return view('koperasi.dashboard');
-    }
+   public function index()
+{
+    $koperasiId = $this->getKoperasiId(); // Menggunakan fungsi pembantu yang sudah ada
+    
+    // Ambil status kesehatan terakhir dari tabel pemkes
+    $lastPemkes = DB::table('pemkes')
+        ->join('rat', 'pemkes.id_rat', '=', 'rat.id_rat')
+        ->where('rat.id_koperasi', $koperasiId)
+        ->latest('pemkes.created_at')
+        ->first();
+
+    // Ambil riwayat pengajuan RAT
+    $riwayatRat = DB::table('rat')
+        ->where('id_koperasi', $koperasiId)
+        ->orderBy('tahun_buku', 'desc')
+        ->get();
+
+    return view('koperasi.dashboard', compact('lastPemkes', 'riwayatRat'));
+}
 
     // --- FITUR RAT ---
 
