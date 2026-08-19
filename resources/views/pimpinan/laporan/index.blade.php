@@ -9,18 +9,19 @@
             <p class="text-slate-500 mt-1">Monitoring laporan RAT koperasi terverifikasi dan belum</p>
         </div>
 
-        <div class="relative group">
-            <button class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-8 rounded-2xl transition-all shadow-lg hover:shadow-emerald-500/30 flex items-center gap-2">
+        <!-- Dropdown dengan Kontrol JavaScript -->
+        <div class="relative">
+            <button onclick="toggleDropdown(event)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-8 rounded-2xl transition-all shadow-lg hover:shadow-emerald-500/30 flex items-center gap-2 focus:outline-none">
                 <i class="fas fa-file-export"></i> Export Data <i class="fas fa-chevron-down text-xs ml-1"></i>
             </button>
-            <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-100 hidden group-hover:block z-50">
+            
+            <div id="dropdownMenu" class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-100 hidden z-50">
                 <a href="{{ route('pimpinan.export.pdf') }}" class="block px-4 py-3 text-slate-700 hover:bg-slate-50 font-bold rounded-t-xl transition-all">
                     <i class="fas fa-file-pdf text-red-600 mr-2"></i> Export PDF
                 </a>
-                
                 <a href="{{ route('pimpinan.export.excel') }}" class="block px-4 py-3 text-slate-700 hover:bg-slate-50 font-bold rounded-b-xl transition-all">
-    <i class="fas fa-file-excel text-green-600 mr-2"></i> Export Excel
-</a>
+                    <i class="fas fa-file-excel text-green-600 mr-2"></i> Export Excel
+                </a>
             </div>
         </div>
     </div>
@@ -65,4 +66,21 @@
         </table>
     </div>
 </div>
+
+<!-- Script Jenius untuk Dropdown Toggle & Click Outside -->
+<script>
+    function toggleDropdown(event) {
+        event.stopPropagation();
+        const menu = document.getElementById('dropdownMenu');
+        menu.classList.toggle('hidden');
+    }
+
+    // Menutup dropdown jika pengguna mengklik di luar area tombol/menu
+    window.addEventListener('click', function() {
+        const menu = document.getElementById('dropdownMenu');
+        if (!menu.classList.contains('hidden')) {
+            menu.classList.add('hidden');
+        }
+    });
+</script>
 @endsection
