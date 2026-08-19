@@ -79,6 +79,9 @@ Route::middleware(['auth:internal'])->group(function () {
 // Verifikasi Lapangan (Fitur Baru yang dihidupkan)
 Route::get('/pengawas/verifikasi-lapangan', [PengawasController::class, 'indexLapangan'])->name('pengawas.lapangan.index');
 
+// TAHAP SOLUSI: Tambahkan rute POST ini untuk memproses data dari form
+Route::post('/pengawas/verifikasi-lapangan', [PengawasController::class, 'prosesLapangan'])->name('pengawas.lapangan.proses');
+
 // Data Koperasi (Menu Baru)
 Route::get('/pengawas/data-koperasi', [PengawasController::class, 'indexDataKoperasi'])->name('pengawas.koperasi.index');
 

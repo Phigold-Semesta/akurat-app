@@ -206,10 +206,15 @@ return response()->download(storage_path('app/public/' . $data->file_sertifikat)
     public function profilKoperasi()
     {
         $koperasiId = $this->getKoperasiId();
-        $profil = DB::table('koperasi')->where('id_koperasi', $koperasiId)->first();
+        
+        // Memperbaiki query dengan melakukan join ke tabel user untuk mengambil nik_koperasi
+        $profil = DB::table('koperasi')
+            ->join('user', 'koperasi.id_user', '=', 'user.id_user')
+            ->where('koperasi.id_koperasi', $koperasiId)
+            ->first();
+
         return view('koperasi.profil.index', compact('profil'));
     }
-
 
     public function updateProfil(Request $request)
     {

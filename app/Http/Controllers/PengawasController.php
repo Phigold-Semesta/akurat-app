@@ -127,6 +127,48 @@ public function index()
         return view('pengawas.verifikasi_lapangan.index', compact('data'));
     }
 
+/**
+     * Memproses data submit verifikasi lapangan dari form.
+     */
+    public function prosesLapangan(Request $request)
+    {
+        // 1. Validasi data inputan dari form
+        // Pastikan atribut 'name' pada inputan HTML di Blade Anda sama dengan ini
+        $request->validate([
+            'id_rat'          => 'required', 
+            'tgl_verifikasi'  => 'required|date',
+            'status_validasi' => 'required|string|max:255',
+            'rekomendasi'     => 'nullable|string',
+            // Buka komentar di bawah ini jika form Anda memiliki fitur upload file
+            // 'file_ba_verifikasi' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048', 
+        ]);
+
+        // (Opsional) Penanganan Upload File Berita Acara (BA)
+        $namaFile = null;
+        /*
+        if ($request->hasFile('file_ba_verifikasi')) {
+            $file = $request->file('file_ba_verifikasi');
+            $namaFile = 'BA_' . time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/ba_verifikasi'), $namaFile);
+        }
+        */
+
+        // 2. Logika Insert Database ke tabel verifikasi_rat
+        DB::table('verifikasi_rat')->insert([
+            'id_rat'             => $request->id_rat,
+            'id_pengawas'        => Auth::id(), // Diambil otomatis dari user yang sedang login
+            'tgl_verifikasi'     => $request->tgl_verifikasi,
+            'status_validasi'    => $request->status_validasi,
+            'rekomendasi'        => $request->rekomendasi,
+            'file_ba_verifikasi' => $namaFile,
+            'created_at'         => now(),
+            'updated_at'         => now()
+        ]);
+
+        // 3. Kembalikan ke halaman sebelumnya dengan pesan sukses
+        return redirect()->back()->with('success', 'Data verifikasi lapangan berhasil disimpan!');
+    }
+    
     /**
      * Menampilkan semua data koperasi yang terdaftar.
      */

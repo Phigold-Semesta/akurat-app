@@ -17,6 +17,10 @@
                 <input type="text" name="nama_koperasi" class="w-full p-3 rounded-xl border border-emerald-200 focus:ring-2 focus:ring-emerald-600 outline-none" required>
             </div>
             <div>
+                <label class="block text-sm font-bold text-emerald-900">NIK Koperasi</label>
+                <input type="text" name="nik_koperasi" class="w-full p-3 rounded-xl border border-emerald-200 focus:ring-2 focus:ring-emerald-600 outline-none" required>
+            </div>
+            <div>
                 <label class="block text-sm font-bold text-emerald-900">Email</label>
                 <input type="email" name="email" class="w-full p-3 rounded-xl border border-emerald-200 focus:ring-2 focus:ring-emerald-600 outline-none" required>
             </div>

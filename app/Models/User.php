@@ -27,6 +27,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'username',
+        'nik_koperasi', // Ditambahkan agar bisa diisi saat registrasi
         'email',
         'password',
         'role',

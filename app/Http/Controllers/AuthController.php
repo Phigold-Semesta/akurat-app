@@ -22,38 +22,44 @@ public function registerKoperasi(Request $request)
 {
     $request->validate([
         'nama_koperasi' => ['required', 'string', 'max:255'],
-        'email'         => ['required', 'string', 'email', 'max:255', 'unique:user'],
+        'nik_koperasi'  => ['required', 'string', 'max:50'], // 1. Tambahkan validasi NIK Koperasi
+        'email'         => ['required', 'string', 'email', 'max:255', 'unique:user,email'],
         'password'      => ['required', 'confirmed', 'min:8'],
     ]);
 
-    // 1. Simpan ke tabel user (pastikan role adalah 'koperasi')
-    $user = DB::table('user')->insertGetId([
-        'username'     => $request->nama_koperasi,
-        'email'    => $request->email,
-        'password' => Hash::make($request->password),
-        'role'     => 'koperasi',
-        'created_at' => now(),
-    ]);
+    // Menggunakan transaksi database agar data sinkron
+    DB::transaction(function () use ($request) {
+        // 2. Simpan ke tabel 'user' beserta nik_koperasi
+        $user = DB::table('user')->insertGetId([
+            'username'     => $request->nama_koperasi,
+            'nik_koperasi' => $request->nik_koperasi, // 3. Masukkan ke kolom tabel user
+            'email'        => $request->email,
+            'password'     => Hash::make($request->password),
+            'role'         => 'koperasi',
+            'is_active'    => 1,
+            'created_at'   => now(),
+            'updated_at'   => now(),
+        ]);
 
-   // 2. Buat profil koperasi kosong di tabel koperasi (untuk sinkronisasi)
-// 2. Buat profil koperasi kosong di tabel koperasi
-DB::table('koperasi')->insert([
-    'id_user'         => $user,
-    'nama_koperasi'   => $request->nama_koperasi,
-    'no_badan_hukum'  => '-', 
-    'alamat'          => '-', 
-    'kecamatan'       => '-', 
-    'tgl_berdiri'     => '2000-01-01', 
-    'status_koperasi' => 'Aktif', 
-    'jumlah_anggota'  => 0, // Tambahkan nilai default untuk jumlah anggota
-    'ketua'           => '-', // Tambahkan jika kolom ini wajib diisi
-    'sekretaris'      => '-', // Tambahkan jika kolom ini wajib diisi
-    'bendahara'       => '-', // Tambahkan jika kolom ini wajib diisi
-    'created_at'      => now(),
-]);
+        // 4. Buat profil kosong di tabel 'koperasi' untuk sinkronisasi
+        DB::table('koperasi')->insert([
+            'id_user'         => $user,
+            'nama_koperasi'   => $request->nama_koperasi,
+            'no_badan_hukum'  => '-', 
+            'alamat'          => '-', 
+            'kecamatan'       => '-', 
+            'tgl_berdiri'     => '2000-01-01', 
+            'status_koperasi' => 'Aktif', 
+            'jumlah_anggota'  => 0,
+            'ketua'           => '-',
+            'sekretaris'      => '-',
+            'bendahara'       => '-',
+            'created_at'      => now(),
+        ]);
+    });
 
-// ... di dalam fungsi registerKoperasi ...
-return redirect()->route('login.koperasi')->with('status', 'registrasi_berhasil');
+    // 5. Redirect ke halaman login koperasi dengan status sukses untuk SweetAlert
+    return redirect()->route('login.koperasi')->with('status', 'registrasi_berhasil');
 }
 
     /**
