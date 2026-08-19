@@ -112,6 +112,10 @@
                     </a>
                     <div class="menu-header px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-200/50 mt-4 transition-opacity">Monitoring</div>
                     <a href="{{ route('pimpinan.laporan.index') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all text-white/80 hover:text-white hover:bg-white/10"><i class="fas fa-file-alt w-6 text-center shrink-0"></i><span class="nav-text ml-3 text-sm">Tinjau Laporan</span></a>
+                    <div class="menu-header px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-200/50 mt-4 transition-opacity">Pengaturan</div>
+                    <a href="{{ route('pimpinan.profil') }}" class="nav-item flex items-center py-4 px-5 rounded-2xl transition-all {{ request()->routeIs('pimpinan.profil') ? 'sidebar-active text-white' : 'text-white/80 hover:text-white hover:bg-white/10' }}">
+                        <i class="fas fa-user-tie w-6 text-center shrink-0"></i><span class="nav-text ml-3 font-bold text-sm tracking-wide">Profil Pimpinan</span>
+                    </a>
                 @endif
             </nav>
 

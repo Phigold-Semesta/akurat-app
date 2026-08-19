@@ -71,6 +71,9 @@ Route::middleware(['auth:internal'])->group(function () {
     Route::get('/pimpinan/laporan', [PimpinanController::class, 'indexLaporan'])->name('pimpinan.laporan.index');
     Route::get('/pimpinan/export/pdf', [PimpinanController::class, 'exportPdf'])->name('pimpinan.export.pdf');
     Route::get('/pimpinan/export/excel', [PimpinanController::class, 'exportExcel'])->name('pimpinan.export.excel');
+
+    Route::get('/pimpinan/profil', [PimpinanController::class, 'profilPimpinan'])->name('pimpinan.profil');
+Route::post('/pimpinan/profil/update', [PimpinanController::class, 'updateProfil'])->name('pimpinan.profil.update');
     
     // Rute Dashboard & Verifikasi RAT Pengawas
     Route::get('/pengawas/dashboard', [PengawasController::class, 'index'])->name('pengawas.dashboard');

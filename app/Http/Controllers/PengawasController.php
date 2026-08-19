@@ -106,15 +106,18 @@ public function index()
     /**
      * Menampilkan daftar koperasi untuk verifikasi lapangan.
      */
+    /**
+     * Menampilkan daftar koperasi untuk verifikasi lapangan.
+     */
     public function indexLapangan()
     {
-        // Mengambil data dengan join berantai
-        $data = DB::table('koperasi')
-            // Join ke tabel RAT dulu untuk mendapatkan koneksi ke PEMKES
-            ->leftJoin('rat', 'koperasi.id_koperasi', '=', 'rat.id_koperasi')
-            // Baru join ke tabel PEMKES berdasarkan id_rat
+        // SOLUSI JENIUS: Ambil data berbasis RAT dan Koperasi secara presisi 
+        // agar setiap baris data di view pasti membawa id_rat yang valid untuk form input.
+        $data = DB::table('rat')
+            ->join('koperasi', 'rat.id_koperasi', '=', 'koperasi.id_koperasi')
             ->leftJoin('pemkes', 'rat.id_rat', '=', 'pemkes.id_rat')
             ->select(
+                'rat.id_rat', // <--- SANGAT PENTING: ID RAT wajib dibawa untuk form
                 'koperasi.id_koperasi', 
                 'koperasi.nama_koperasi', 
                 'koperasi.alamat', 
@@ -130,20 +133,17 @@ public function index()
 /**
      * Memproses data submit verifikasi lapangan dari form.
      */
-    public function prosesLapangan(Request $request)
+  public function prosesLapangan(Request $request)
     {
         // 1. Validasi data inputan dari form
-        // Pastikan atribut 'name' pada inputan HTML di Blade Anda sama dengan ini
         $request->validate([
             'id_rat'          => 'required', 
             'tgl_verifikasi'  => 'required|date',
             'status_validasi' => 'required|string|max:255',
             'rekomendasi'     => 'nullable|string',
-            // Buka komentar di bawah ini jika form Anda memiliki fitur upload file
-            // 'file_ba_verifikasi' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048', 
         ]);
 
-        // (Opsional) Penanganan Upload File Berita Acara (BA)
+        // Penanganan Upload File Berita Acara (BA) jika ada
         $namaFile = null;
         /*
         if ($request->hasFile('file_ba_verifikasi')) {
@@ -153,10 +153,19 @@ public function index()
         }
         */
 
+        // AMBIL ID PENGAWAS YANG SESUAI DENGAN USER LOGIN
+        $pengawas = DB::table('pengawas_lapangan')
+            ->where('id_user', Auth::id())
+            ->first();
+
+        if (!$pengawas) {
+            return redirect()->back()->with('error', 'Gagal: Data profil pengawas untuk user ini tidak ditemukan.');
+        }
+
         // 2. Logika Insert Database ke tabel verifikasi_rat
         DB::table('verifikasi_rat')->insert([
             'id_rat'             => $request->id_rat,
-            'id_pengawas'        => Auth::id(), // Diambil otomatis dari user yang sedang login
+            'id_pengawas'        => $pengawas->id_pengawas, // Menggunakan id_pengawas yang valid dari tabel pengawas_lapangan
             'tgl_verifikasi'     => $request->tgl_verifikasi,
             'status_validasi'    => $request->status_validasi,
             'rekomendasi'        => $request->rekomendasi,

@@ -4,6 +4,7 @@
 @section('content')
 <div x-data="{ 
     showModal: false, 
+    idRat: '',
     namaKop: '', 
     skorPemkes: '', 
     catatanJpfk: '' 
@@ -38,7 +39,7 @@
                         {{ $koperasi->skor_pemkes ?? 'Belum ada' }}
                     </td>
                     <td class="px-6 py-5 text-center">
-                        <button @click="showModal = true; namaKop = '{{ $koperasi->nama_koperasi }}'; skorPemkes = '{{ $koperasi->skor_pemkes }}'; catatanJpfk = '{{ $koperasi->catatan_jpfk }}'" 
+                        <button @click="showModal = true; idRat = '{{ $koperasi->id_rat }}'; namaKop = '{{ $koperasi->nama_koperasi }}'; skorPemkes = '{{ $koperasi->skor_pemkes }}'; catatanJpfk = '{{ $koperasi->catatan_jpfk }}'" 
                                 class="bg-emerald-600 text-white px-5 py-2 rounded-xl text-xs font-bold hover:bg-emerald-700 transition-all shadow-lg">
                             <i class="fas fa-clipboard-check mr-2"></i> Input Hasil
                         </button>
@@ -51,6 +52,7 @@
         </table>
     </div>
 
+    <!-- Modal Input Hasil -->
     <div x-show="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" x-cloak>
         <div class="bg-white dark:bg-emerald-800 rounded-3xl p-8 w-full max-w-lg shadow-2xl">
             <h3 class="text-xl font-black text-emerald-900 dark:text-white mb-2">Input Hasil Verifikasi</h3>
@@ -62,12 +64,24 @@
                 <p class="text-xs mt-1 text-slate-600 dark:text-emerald-400" x-text="'Catatan: ' + (catatanJpfk || '-')"></p>
             </div>
 
-            <form action="#" method="POST">
+            <!-- Form diarahkan ke route proses verifikasi lapangan -->
+            <form action="{{ route('pengawas.lapangan.proses') }}" method="POST">
                 @csrf
-                <textarea name="catatan_inspeksi" class="w-full p-4 border border-slate-200 rounded-2xl mb-4" placeholder="Masukkan catatan hasil inspeksi lapangan..." rows="3"></textarea>
+                <!-- Input tersembunyi untuk membawa ID RAT yang dipilih -->
+                <input type="hidden" name="id_rat" x-model="idRat">
+                <!-- Otomatis menyertakan tanggal hari ini -->
+                <input type="hidden" name="tgl_verifikasi" value="{{ date('Y-m-d') }}">
+                <!-- Status validasi otomatis default Valid atau Sesuai -->
+                <input type="hidden" name="status_validasi" value="Valid">
+
+                <div class="mb-4">
+                    <label class="block text-xs font-bold text-emerald-900 dark:text-emerald-100 uppercase mb-2">Catatan Rekomendasi / Inspeksi</label>
+                    <textarea name="rekomendasi" class="w-full p-4 border border-slate-200 dark:border-emerald-700 rounded-2xl bg-white dark:bg-emerald-900 text-slate-800 dark:text-white" placeholder="Masukkan catatan hasil inspeksi lapangan..." rows="3" required></textarea>
+                </div>
+
                 <div class="flex gap-3">
-                    <button type="button" @click="showModal = false" class="flex-1 py-3 bg-slate-100 rounded-xl font-bold">Batal</button>
-                    <button type="submit" class="flex-1 py-3 bg-emerald-600 text-white rounded-xl font-bold">Simpan Hasil</button>
+                    <button type="button" @click="showModal = false" class="flex-1 py-3 bg-slate-100 dark:bg-emerald-700 dark:text-white rounded-xl font-bold">Batal</button>
+                    <button type="submit" class="flex-1 py-3 bg-emerald-600 text-white rounded-xl font-bold hover:bg-emerald-700">Simpan Hasil</button>
                 </div>
             </form>
         </div>

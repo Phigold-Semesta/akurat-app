@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\RatExport; // Tambahkan ini di paling atas
-
+use Illuminate\Support\Facades\Auth; // <--- PASTIKAN BARIS INI ADA DI ATAS
 // Anda akan membuat class Export nanti, contoh:
 // use App\Exports\RatExport;
 
@@ -93,5 +93,70 @@ class PimpinanController extends Controller implements HasMiddleware
     public function laporanStrategis()
     {
         return view('pimpinan.laporan_strategis');
+    }
+
+    /**
+     * Menampilkan profil pimpinan yang sedang login.
+     */
+   public function profilPimpinan()
+    {
+        // Cek apakah data pimpinan sudah ada
+        $profil = DB::table('pimpinan')
+            ->where('id_user', Auth::id())
+            ->first();
+
+        // SOLUSI JENIUS: Jika belum ada, buatkan data otomatis agar tidak kosong/null
+        if (!$profil) {
+            $userId = Auth::id();
+            $user = DB::table('user')->where('id_user', $userId)->first();
+            
+            DB::table('pimpinan')->insert([
+                'id_user'       => $userId,
+                'nama_pimpinan' => $user->username ?? 'Pimpinan Utama',
+                'jabatan'       => 'Pimpinan',
+                'no_telp'       => '-',
+                'created_at'    => now(),
+                'updated_at'    => now(),
+            ]);
+
+            // Ambil ulang data yang baru saja dimasukkan
+            $profil = DB::table('pimpinan')->where('id_user', $userId)->first();
+        }
+
+        return view('pimpinan.profil.index', compact('profil'));
+    }
+
+    /**
+     * Memproses update profil pimpinan.
+     */
+    public function updateProfil(Request $request)
+    {
+        $request->validate([
+            'nama_pimpinan' => 'required|string|max:255',
+            'jabatan'       => 'required|string|max:100',
+            'no_telp'       => 'required|string|max:20',
+        ]);
+
+        $pimpinan = DB::table('pimpinan')->where('id_user', Auth::id())->first();
+
+        if (!$pimpinan) {
+            return redirect()->back()->with('error', 'Profil pimpinan tidak ditemukan.');
+        }
+
+        // Update data di tabel pimpinan
+        DB::table('pimpinan')->where('id_user', Auth::id())->update([
+            'nama_pimpinan' => $request->nama_pimpinan,
+            'jabatan'       => $request->jabatan,
+            'no_telp'       => $request->no_telp,
+            'updated_at'    => now(),
+        ]);
+
+        // Update juga username di tabel user jika diperlukan agar sinkron
+        DB::table('user')->where('id_user', Auth::id())->update([
+            'username'   => $request->nama_pimpinan,
+            'updated_at' => now(),
+        ]);
+
+        return redirect()->route('pimpinan.profil')->with('success', 'Profil pimpinan berhasil diperbarui!');
     }
 }
