@@ -106,36 +106,74 @@ class AdminController extends Controller implements HasMiddleware
         $request->validate([
             'status' => 'required|in:Sehat,Cukup Sehat,Dalam Pengawasan'
         ]);
-
+ 
+        // 1. Ambil data lengkap — TAMBAHKAN no_badan_hukum & alamat
+        //    (sesuaikan nama kolom ini dengan struktur tabel koperasi kamu
+        //    jika namanya berbeda, mis. 'nomor_bh' atau 'alamat_koperasi')
         $data = DB::table('pemkes')
             ->join('rat', 'pemkes.id_rat', '=', 'rat.id_rat')
             ->join('koperasi', 'rat.id_koperasi', '=', 'koperasi.id_koperasi')
+            ->select(
+                'pemkes.*',
+                'koperasi.nama_koperasi',
+                'koperasi.no_badan_hukum',
+                'koperasi.alamat',
+                'rat.tahun_buku'
+            )
             ->where('id_pemkes', $id)
             ->first();
-
-        // 1. Data untuk template PDF
+ 
+        // 2. PENTING: cek data ada atau tidak, supaya tidak fatal error
+        //    kalau $id tidak ditemukan di database
+        if (!$data) {
+            return redirect()->route('admin.verifikasi.index')
+                ->with('error', 'Data verifikasi dengan ID tersebut tidak ditemukan.');
+        }
+ 
+        // Update status terbaru ke object $data sebelum dipakai di PDF,
+        // supaya sertifikat menampilkan status yang BARU dipilih admin,
+        // bukan status lama dari database.
+        $data->status_kesehatan = $request->status;
+ 
+        // 3. Susun $pdfData SESUAI variabel yang dipakai di template blade
         $pdfData = [
-            'nama'    => $data->nama_koperasi,
-            'skor'    => $data->skor_pemkes,
-            'status'  => $request->status,
-            'tanggal' => now()->format('d F Y')
+            'koperasi' => $data, // dipakai sbg $koperasi->nama_koperasi, ->no_badan_hukum, ->alamat
+            'pemkes'   => $data, // dipakai sbg $pemkes->skor_pemkes, ->status_kesehatan
+ 
+            'tahun_buku'     => $data->tahun_buku,
+            'tanggal_terbit' => now()->translatedFormat('d F Y'),
+ 
+            // Skor per indikator — sesuaikan nama kolom ini dengan
+            // kolom asli di tabel `pemkes` kamu
+            'skor_tata_kelola'      => $data->skor_tata_kelola ?? '-',
+            'skor_profil_resiko'    => $data->skor_profil_resiko ?? '-',
+            'skor_kinerja_keuangan' => $data->skor_kinerja_keuangan ?? '-',
+            'skor_permodalan'       => $data->skor_permodalan ?? '-',
+            'total_skor'            => $data->skor_pemkes ?? '-',
         ];
-        
-        // 2. Generate PDF
-        $pdf = Pdf::loadView('admin.sertifikat.template', $pdfData);
-        
-        // 3. Simpan PDF ke storage/app/public/sertifikat/
-        $fileName = 'Sertifikat_' . $data->nama_koperasi . '_' . time() . '.pdf';
-        $path = 'sertifikat/' . $fileName;
-        Storage::disk('public')->put($path, $pdf->output());
-
-        // 4. Update Database
-        DB::table('pemkes')->where('id_pemkes', $id)->update([
-            'status_kesehatan' => $request->status,
-            'file_sertifikat'  => $path,
-            'updated_at'       => now(),
-        ]);
-
-        return redirect()->route('admin.verifikasi.index')->with('success', 'Verifikasi sukses! Sertifikat telah digenerate.');
+ 
+        // 4. Bungkus proses generate PDF dengan try-catch,
+        //    supaya kalau gagal, user diarahkan balik dengan pesan jelas
+        //    (bukan halaman 500 yang bikin "nyangkut" di URL POST)
+        try {
+            $pdf = Pdf::loadView('admin.sertifikat.template', $pdfData);
+ 
+            $fileName = 'Sertifikat_' . $data->nama_koperasi . '_' . time() . '.pdf';
+            $path = 'sertifikat/' . $fileName;
+            Storage::disk('public')->put($path, $pdf->output());
+ 
+            DB::table('pemkes')->where('id_pemkes', $id)->update([
+                'status_kesehatan' => $request->status,
+                'file_sertifikat'  => $path,
+                'updated_at'       => now(),
+            ]);
+ 
+            return redirect()->route('admin.verifikasi.index')
+                ->with('success', 'Verifikasi sukses! Sertifikat telah digenerate.');
+ 
+        } catch (\Throwable $e) {
+            return redirect()->route('admin.verifikasi.index')
+                ->with('error', 'Gagal membuat sertifikat: ' . $e->getMessage());
+        }
     }
 }

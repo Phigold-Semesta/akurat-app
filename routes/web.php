@@ -55,6 +55,10 @@ Route::middleware(['auth:internal'])->group(function () {
     // --- Rute Manajemen Verifikasi (AKURAT) ---
     Route::get('/admin/verifikasi', [AdminController::class, 'indexVerifikasi'])->name('admin.verifikasi.index');
     Route::post('/admin/verifikasi/{id}', [AdminController::class, 'prosesVerifikasi'])->name('admin.verifikasi.proses');
+   
+
+// opsional, kalau butuh lihat detail via GET:
+
 // --- Rute Manajemen Data Utama ---
     // Menu Data Pengguna
     Route::get('/pengguna', [AdminController::class, 'indexPengguna'])->name('admin.pengguna.index');

@@ -2,56 +2,95 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <title>Sertifikat Pemeriksaan Kesehatan Koperasi</title>
     <style>
-        @page { size: A4 landscape; margin: 10px; }
-        body { font-family: 'Helvetica', sans-serif; color: #022c22; margin: 0; padding: 0; }
-        .border-container { 
-            border: 8px solid #008f5d; 
-            padding: 20px; 
-            height: 550px; /* Dibatasi agar pas satu halaman */
+        /* Pengaturan Ukuran Kertas A4 Portrait - Mencegah halaman kosong berlebih */
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
+
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            color: #000000;
+            margin: 0;
+            padding: 0;
+            font-size: 14px;
+        }
+
+        .page-container {
             position: relative;
+            width: 210mm;
+            height: 297mm;
+            overflow: hidden;
         }
-        .header { text-align: center; margin-bottom: 20px; }
-        .title { font-size: 32px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: #008f5d; margin-bottom: 5px; }
-        .subtitle { font-size: 16px; font-weight: 600; margin-bottom: 20px; }
-        .recipient { font-size: 24px; font-weight: 800; border-bottom: 2px solid #008f5d; display: inline-block; padding-bottom: 2px; margin: 10px 0; }
-        .content { margin-top: 10px; line-height: 1.4; text-align: center; }
-        .badge { 
-            margin-top: 20px; 
-            font-size: 18px; 
-            font-weight: 800; 
-            background-color: #008f5d; 
-            color: white; 
-            padding: 8px 15px; 
-            display: inline-block; 
-            border-radius: 8px;
+
+        /* Memaksa halaman 1 selesai dan lanjut ke halaman 2 secara bersih */
+        .page-break {
+            page-break-after: always;
+            break-after: page;
         }
-        .footer { margin-top: 30px; text-align: right; width: 95%; }
+
+        .bg-template {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Styling Posisi Teks Dinamis */
+        .text-overlay {
+            position: absolute;
+            font-weight: bold;
+            font-size: 14px;
+            z-index: 10;
+        }
+
+        /* 
+           KALIBRASI AKHIR PRESISI HALAMAN 1 (Sertifikat):
+           - Nama Koperasi diturunkan sedikit lagi (top: 360px) agar pas presisi.
+        */
+        .pos-nama       { top: 360px; left: 320px; font-size: 15px; }
+        .pos-nomor-bh   { top: 388px; left: 320px; font-size: 15px; }
+        .pos-alamat     { top: 418px; left: 320px; width: 320px; line-height: 1.3; font-size: 13px; font-weight: normal; }
+        
+        .pos-nilai      { top: 474px; left: 320px; font-size: 15px; }
+        .pos-kategori   { top: 504px; left: 320px; font-size: 15px; color: #b3261e; }
+
+        /* Koordinat Halaman 2 (Lampiran - Data Skor dikosongkan) */
+        .pos-skor-1     { top: 212px; left: 565px; text-align: center; width: 60px; }
+        .pos-skor-2     { top: 256px; left: 565px; text-align: center; width: 60px; }
+        .pos-skor-3     { top: 300px; left: 565px; text-align: center; width: 60px; }
+        .pos-skor-4     { top: 344px; left: 565px; text-align: center; width: 60px; }
+        .pos-total-skor { top: 395px; left: 565px; text-align: center; width: 60px; font-size: 15px; }
     </style>
 </head>
 <body>
-    <div class="border-container">
-        <div class="header">
-            <div class="title">Sertifikat Kesehatan Koperasi</div>
-            <div class="subtitle">Dinas Koperasi dan UKM Karawang</div>
-        </div>
 
-        <div class="content">
-            <p style="margin: 5px;">Dengan ini menyatakan bahwa:</p>
-            <div class="recipient">{{ $nama }}</div>
-            <p style="margin: 5px;">Telah dilakukan penilaian kesehatan koperasi dengan hasil:</p>
-            
-            <div class="badge">STATUS: {{ strtoupper($status) }}</div>
-            <p style="font-size: 16px; margin-top: 15px;">
-                Dengan total skor penilaian: <strong>{{ $skor }}</strong>
-            </p>
-        </div>
+    <!-- ================= HALAMAN 1 : SERTIFIKAT ================= -->
+    <div class="page-container page-break">
+        <img src="{{ public_path('assets/img/sertifikat_bg.png.png') }}" class="bg-template" alt="Sertifikat Background">
 
-        <div class="footer">
-            <p style="margin: 2px;">Karawang, {{ $tanggal }}</p>
-            <br><br><br><br>
-            <p style="margin: 2px;"><strong>Kepala Dinas Koperasi & UKM</strong></p>
-        </div>
+        <div class="text-overlay pos-nama">{{ $koperasi->nama_koperasi ?? '-' }}</div>
+        <div class="text-overlay pos-nomor-bh">{{ $koperasi->no_badan_hukum ?? '-' }}</div>
+        <div class="text-overlay pos-alamat">{{ $koperasi->alamat ?? '-' }}</div>
+        <div class="text-overlay pos-nilai">{{ $pemkes->skor_pemkes ?? '-' }}</div>
+        <div class="text-overlay pos-kategori">{{ strtoupper($pemkes->status_kesehatan ?? '-') }}</div>
     </div>
+
+    <!-- ================= HALAMAN 2 : LAMPIRAN ================= -->
+    <div class="page-container">
+        <img src="{{ public_path('assets/img/lampiran_bg.png.png') }}" class="bg-template" alt="Lampiran Background">
+
+        <!-- Data skor dikosongkan sesuai permintaan -->
+        <div class="text-overlay pos-skor-1"></div>
+        <div class="text-overlay pos-skor-2"></div>
+        <div class="text-overlay pos-skor-3"></div>
+        <div class="text-overlay pos-skor-4"></div>
+        <div class="text-overlay pos-total-skor"></div>
+    </div>
+
 </body>
 </html>
