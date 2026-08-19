@@ -86,16 +86,19 @@ class AdminController extends Controller implements HasMiddleware
     /**
      * Menampilkan daftar verifikasi koperasi.
      */
+    /**
+     * Menampilkan daftar verifikasi koperasi.
+     */
     public function indexVerifikasi()
     {
         $data = DB::table('pemkes')
             ->join('rat', 'pemkes.id_rat', '=', 'rat.id_rat')
             ->join('koperasi', 'rat.id_koperasi', '=', 'koperasi.id_koperasi')
-            ->select('pemkes.*', 'koperasi.nama_koperasi', 'rat.tahun_buku')
+            ->select('pemkes.*', 'koperasi.nama_koperasi', 'rat.tahun_buku', 'rat.file_dokumen') // Menambahkan kolom file_dokumen dari tabel rat
             ->orderBy('pemkes.created_at', 'desc')
             ->get();
 
-        return view('admin.verifikasi.index', compact('data'));
+        return view('admin.verifikasi.index', compact('data')); // Disesuaikan ke direktori view verifikasi_rat
     }
 
     /**

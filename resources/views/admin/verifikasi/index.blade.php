@@ -15,6 +15,7 @@
                     <th class="py-4 px-2">Nama Koperasi</th>
                     <th class="py-4 px-2">Tahun</th>
                     <th class="py-4 px-2">Skor</th>
+                    <th class="py-4 px-2">Dokumen</th> <!-- Kolom Dokumen PDF -->
                     <th class="py-4 px-2">Status</th>
                     <th class="py-4 px-2 text-center">Aksi</th>
                 </tr>
@@ -25,6 +26,18 @@
                     <td class="py-6 px-2">{{ $item->nama_koperasi }}</td>
                     <td class="py-6 px-2">{{ $item->tahun_buku }}</td>
                     <td class="py-6 px-2 text-emerald-600">{{ $item->skor_pemkes }}</td>
+                    
+                    <!-- Kolom Dokumen PDF (DISESUAIKAN: menggunakan file_dokumen sesuai database) -->
+                    <td class="py-6 px-2">
+                        @if(!empty($item->file_dokumen))
+                            <a href="{{ asset('storage/' . $item->file_dokumen) }}" target="_blank" class="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 hover:underline text-xs font-bold">
+                                <i class="fas fa-file-pdf text-red-500"></i> Buka PDF
+                            </a>
+                        @else
+                            <span class="text-slate-400 text-xs font-semibold">Tidak ada</span>
+                        @endif
+                    </td>
+
                     <td class="py-6 px-2">
                         <span class="px-3 py-1 rounded-full text-[10px] uppercase {{ $item->status_kesehatan == 'Dalam Proses' ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700' }}">
                             {{ $item->status_kesehatan }}
